@@ -1,0 +1,256 @@
+generator client {
+  provider      = "prisma-client-js"
+  // "native" for local/Docker dev, "rhel-openssl-3.0.x" for Vercel's Node runtime.
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum QrType {
+  CAR
+  DOG
+  LUGGAGE
+  OTHER
+}
+
+enum QrStatus {
+  PENDING_PAYMENT
+  ACTIVE
+  DISABLED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+}
+
+enum ScanAction {
+  VIEWED
+  CALL_OWNER
+  CALL_EMERGENCY
+}
+
+enum CallerType {
+  OWNER
+  EMERGENCY
+}
+
+enum CallStatus {
+  INITIATED
+  ANSWERED
+  MISSED
+  BUSY
+  REJECTED
+  FAILED
+}
+
+enum NotificationType {
+  QR_CREATED
+  PAYMENT_SUCCESS
+  QR_SCANNED
+  INCOMING_CALL
+  EMERGENCY_CONTACT_CALLED
+  SPEED_ALERT
+}
+
+model User {
+  id        String   @id @default(uuid())
+  fullName  String
+  email     String
+  mobile    String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  qrCodes       Qr[]
+  payments      Payment[]
+  notifications Notification[]
+
+  @@map("users")
+}
+
+model Qr {
+  id          String   @id @default(uuid())
+  uniqueCode  String   @unique @default(uuid())
+  // 5-digit, zero-padded, sequential extension number (starts at 1011) - assigned from
+  // the "qr_extension_number_seq" Postgres sequence in qr.service.ts, printed on the
+  // physical QR sticker/card as the human-readable reference number.
+  extensionNumber String   @unique
+  type            QrType
+  status          QrStatus @default(PENDING_PAYMENT)
+  ownerName       String
+  ownerMobile     String
+  ownerEmail      String
+
+  // USA-standard address, stored as structured fields (not a single free-text line)
+  addressLine1 String
+  addressLine2 String?
+  city         String
+  state        String // 2-letter USPS state code, e.g. "CA"
+  zipCode      String // 5 or 9 digit ZIP (ZIP+4)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  vehicle    Vehicle?
+  dog        Dog?
+  luggage    Luggage?
+  otherItem  OtherItem?
+
+  emergencyContacts EmergencyContact[]
+  payments          Payment[]
+  scanLogs          ScanLog[]
+  callLogs          CallLog[]
+  blockedCallers    BlockedCaller[]
+
+  @@map("qr_codes")
+}
+
+model EmergencyContact {
+  id           String @id @default(uuid())
+  name         String
+  relationship String
+  mobile       String
+
+  qrId String
+  qr   Qr     @relation(fields: [qrId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@map("emergency_contacts")
+}
+
+model Vehicle {
+  id                String  @id @default(uuid())
+  vehicleNumber     String
+  vehicleMake       String?
+  vehicleModel      String?
+  vehicleColor      String?
+  speedAlertEnabled Boolean @default(false)
+
+  qrId String @unique
+  qr   Qr     @relation(fields: [qrId], references: [id], onDelete: Cascade)
+
+  @@map("vehicles")
+}
+
+model Dog {
+  id       String  @id @default(uuid())
+  name     String
+  breed    String
+  photoUrl String?
+
+  qrId String @unique
+  qr   Qr     @relation(fields: [qrId], references: [id], onDelete: Cascade)
+
+  @@map("dogs")
+}
+
+model Luggage {
+  id              String  @id @default(uuid())
+  bagDescription  String
+  imageUrl        String?
+
+  qrId String @unique
+  qr   Qr     @relation(fields: [qrId], references: [id], onDelete: Cascade)
+
+  @@map("luggage")
+}
+
+model OtherItem {
+  id          String @id @default(uuid())
+  itemName    String
+  description String
+
+  qrId String @unique
+  qr   Qr     @relation(fields: [qrId], references: [id], onDelete: Cascade)
+
+  @@map("other_items")
+}
+
+model Payment {
+  id                  String        @id @default(uuid())
+  amount              Decimal       @default(5.00)
+  currency            String        @default("usd")
+  status              PaymentStatus @default(PENDING)
+  stripeSessionId     String?       @unique
+  stripePaymentIntent String?
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  qrId String
+  qr   Qr     @relation(fields: [qrId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+model ScanLog {
+  id           String     @id @default(uuid())
+  ipAddress    String?
+  browser      String?
+  device       String?
+  latitude     Float?
+  longitude    Float?
+  actionTaken  ScanAction @default(VIEWED)
+  createdAt    DateTime   @default(now())
+
+  qrId String
+  qr   Qr     @relation(fields: [qrId], references: [id], onDelete: Cascade)
+
+  @@map("scan_logs")
+}
+
+model CallLog {
+  id            String     @id @default(uuid())
+  callerType    CallerType
+  targetMobile  String // resolved owner/contact number at initiate time - never sent to the browser
+  twilioCallSid String?
+  durationSec   Int?
+  status        CallStatus @default(INITIATED)
+  callerIp      String?
+  callerRef     String? // fingerprint used for blocked-caller matching
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  qrId String
+  qr   Qr     @relation(fields: [qrId], references: [id], onDelete: Cascade)
+
+  @@map("call_logs")
+}
+
+model BlockedCaller {
+  id         String   @id @default(uuid())
+  identifier String
+  reason     String?
+  createdAt  DateTime @default(now())
+
+  qrId String
+  qr   Qr     @relation(fields: [qrId], references: [id], onDelete: Cascade)
+
+  @@unique([qrId, identifier])
+  @@map("blocked_callers")
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  type      NotificationType
+  title     String
+  body      String
+  data      Json?
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}

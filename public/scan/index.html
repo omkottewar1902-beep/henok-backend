@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JCscanToConnect - Scan &amp; Call</title>
+  <link rel="stylesheet" href="/scan/styles.css" />
+</head>
+<body>
+  <main class="card" id="app">
+    <div class="brand">
+      <div class="logo">JC</div>
+      <span>JCscanToConnect</span>
+    </div>
+    <h1>SCAN &amp; CALL</h1>
+
+    <div id="loading" class="state">Loading QR details&hellip;</div>
+
+    <div id="content" class="hidden">
+      <p class="qr-type" id="qrType"></p>
+      <p class="qr-label" id="qrLabel"></p>
+
+      <section class="masked-block">
+        <h2>Owner</h2>
+        <p id="ownerName" class="masked-name"></p>
+        <p id="ownerMobile" class="masked-mobile"></p>
+      </section>
+
+      <section id="contactsBlock" class="masked-block hidden">
+        <h2>Emergency Contact</h2>
+        <div id="contactsList"></div>
+      </section>
+
+      <div class="actions">
+        <button id="callOwnerBtn" class="btn btn-primary">📞 Call Owner</button>
+      </div>
+
+      <div id="callStatus" class="state hidden"></div>
+    </div>
+
+    <div id="errorState" class="state hidden"></div>
+  </main>
+
+  <script src="https://sdk.twilio.com/js/voice/releases/2.11.1/twilio.min.js"></script>
+  <script src="/scan/scan.js"></script>
+</body>
+</html>
