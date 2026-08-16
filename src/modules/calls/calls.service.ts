@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid';
 import twilio from 'twilio';
 import { prisma } from '../../config/db';
 import { env } from '../../config/env';
-import { twilioClient, AccessToken, VoiceGrant } from '../../config/twilio';
+import { twilioClient, isTwilioConfigured, AccessToken, VoiceGrant } from '../../config/twilio';
 import { ApiError } from '../../common/middlewares/error.middleware';
 import { callerFingerprint, extractDeviceInfo } from '../../common/utils/device.util';
 import { displayLabel, assertQrOwnership } from '../qr/qr.service';
@@ -20,6 +20,13 @@ interface InitiateCallInput {
 }
 
 export async function initiateCall(input: InitiateCallInput, req: Request) {
+  if (!isTwilioConfigured) {
+    throw new ApiError(
+      503,
+      'Calling is not enabled yet. Add real Twilio credentials to .env to turn on masked calls and SMS alerts.',
+    );
+  }
+
   const qr = await prisma.qr.findUnique({
     where: { id: input.qrId },
     include: { emergencyContacts: true, vehicle: true, dog: true, luggage: true, otherItem: true },
