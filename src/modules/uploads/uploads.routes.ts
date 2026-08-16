@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { requireAuth } from '../../common/middlewares/auth.middleware';
-import { uploadImageMiddleware, uploadImage, guardUploadTarget } from './uploads.controller';
+import { uploadImageMiddleware, uploadImage, rejectOnServerlessFs } from './uploads.controller';
 
 const router = Router();
 
@@ -22,8 +22,7 @@ const router = Router();
  *     responses:
  *       201: { description: Public URL of the uploaded image }
  *       400: { description: Invalid or missing file }
- *       501: { description: Uploads not available on this deployment (Vercel with no S3 configured) }
  */
-router.post('/', requireAuth, guardUploadTarget, uploadImageMiddleware, uploadImage);
+router.post('/', requireAuth, rejectOnServerlessFs, uploadImageMiddleware, uploadImage);
 
 export default router;

@@ -24,7 +24,7 @@ services:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/jcscantoconnect?schema=public
     ports:
       - '4000:4000'
-    # Dockerfile's CMD already runs `prisma migrate deploy` before booting.
+    command: sh -c "npx prisma migrate deploy && node dist/server.js"
 
 volumes:
   jcscantoconnect_db_data:

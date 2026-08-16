@@ -10,18 +10,9 @@ export async function checkMobile(req: Request, res: Response, next: NextFunctio
   }
 }
 
-export async function sendOtp(req: Request, res: Response, next: NextFunction): Promise<void> {
-  try {
-    const result = await authService.sendOtp(req.body.mobile);
-    res.json(result);
-  } catch (err) {
-    next(err);
-  }
-}
-
 export async function login(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const result = await authService.login(req.body.mobile, req.body.otp);
+    const result = await authService.login(req.body.mobile);
     res.json(result);
   } catch (err) {
     next(err);

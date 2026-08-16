@@ -11,11 +11,7 @@ interface AuthedSocket extends Socket {
 
 export function initSocket(httpServer: HttpServer): SocketIOServer {
   io = new SocketIOServer(httpServer, {
-    cors: {
-      // Dev: reflect any origin. Prod: env-validated allowlist.
-      origin: env.isProd ? env.corsOrigins : true,
-      credentials: true,
-    },
+    cors: { origin: '*' },
   });
 
   io.use((socket: AuthedSocket, next) => {
@@ -44,12 +40,4 @@ export function initSocket(httpServer: HttpServer): SocketIOServer {
 export function emitToUser(userId: string, event: string, payload: unknown): void {
   if (!io) return;
   io.to(`user:${userId}`).emit(event, payload);
-}
-
-export function closeSocket(): Promise<void> {
-  return new Promise((resolve) => {
-    if (!io) return resolve();
-    io.close(() => resolve());
-    io = null;
-  });
 }
