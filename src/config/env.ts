@@ -2,6 +2,8 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+const isProd = (process.env.NODE_ENV ?? 'development') === 'production';
+
 function required(name: string, fallback?: string): string {
   const value = process.env[name] ?? fallback;
   if (value === undefined) {
@@ -12,7 +14,13 @@ function required(name: string, fallback?: string): string {
 
 export const env = {
   nodeEnv: process.env.NODE_ENV ?? 'development',
+  isProd,
   port: parseInt(process.env.PORT ?? '4000', 10),
+  logLevel: (process.env.LOG_LEVEL ?? (isProd ? 'info' : 'debug')) as
+    | 'debug'
+    | 'info'
+    | 'warn'
+    | 'error',
   appName: process.env.APP_NAME ?? 'JCSafeScan',
   appBaseUrl: required('APP_BASE_URL', 'http://localhost:4000'),
   scanPublicUrl: required('SCAN_PUBLIC_URL', 'http://localhost:4000/scan'),
