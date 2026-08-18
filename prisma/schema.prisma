@@ -75,7 +75,7 @@ model User {
 model Qr {
   id          String   @id @default(uuid())
   uniqueCode  String   @unique @default(uuid())
-  // 5-digit, zero-padded, sequential extension number (starts at 1011) - assigned from
+  // 5-digit, zero-padded, sequential extension number (starts at 10001) - assigned from
   // the "qr_extension_number_seq" Postgres sequence in qr.service.ts, printed on the
   // physical QR sticker/card as the human-readable reference number.
   extensionNumber String   @unique

@@ -14,7 +14,7 @@ export const qrDetailInclude = {
 
 /**
  * Draws the next value from the "qr_extension_number_seq" Postgres sequence (starts at
- * 1011, see migration 20260714203000_add_extension_number) and zero-pads it to 5 digits.
+ * 10001, see migration 20260818000000_extension_seq_restart_10001) and zero-pads it to 5 digits.
  * The sequence guarantees uniqueness under concurrent inserts without an app-level lock.
  */
 async function generateExtensionNumber(): Promise<string> {
