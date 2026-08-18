@@ -31,6 +31,7 @@ const router = Router();
  *       200: { description: Twilio Voice access token + callLogId for the browser to place the masked call }
  *       403: { description: Caller is blocked }
  */
+router.get('/dial', callLimiter, callsController.dial);
 router.post('/initiate', callLimiter, validateBody(initiateCallSchema), callsController.initiate);
 
 /**

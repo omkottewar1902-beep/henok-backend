@@ -39,6 +39,21 @@ export async function statusWebhook(req: Request, res: Response, next: NextFunct
   }
 }
 
+export async function dial(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const { qrId, type, contactId } = req.query as Record<string, string>;
+    if (!qrId || !type) {
+      res.status(400).send('Missing qrId or type');
+      return;
+    }
+    const targetType = type === 'EMERGENCY' ? 'EMERGENCY' : 'OWNER';
+    const mobile = await callsService.resolveDialNumber(qrId, targetType, contactId, req);
+    res.redirect(`tel:${mobile.replace(/[^\d+]/g, '')}`);
+  } catch (err) {
+    next(err);
+  }
+}
+
 export async function listForOwner(req: AuthedRequest, res: Response, next: NextFunction): Promise<void> {
   try {
     const logs = await callsService.listCallLogsForOwner(req.userId!, req.params.qrId);

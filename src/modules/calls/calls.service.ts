@@ -163,6 +163,45 @@ export async function handleStatusCallback(
   });
 }
 
+/**
+ * Looks up the real phone number for an owner or emergency contact and returns it
+ * so the controller can redirect the browser to `tel:<number>`. The real number
+ * is never sent to the scan-page JavaScript — it only travels as an HTTP redirect.
+ * Also logs the call action so the owner can see it in their scan/call history.
+ */
+export async function resolveDialNumber(
+  qrId: string,
+  targetType: 'OWNER' | 'EMERGENCY',
+  contactId: string | undefined,
+  req: Request,
+): Promise<string> {
+  const qr = await prisma.qr.findUnique({
+    where: { id: qrId },
+    include: { emergencyContacts: true },
+  });
+
+  if (!qr || qr.status !== 'ACTIVE') {
+    throw new ApiError(404, 'This QR code is not active');
+  }
+
+  let targetMobile: string;
+
+  if (targetType === 'OWNER') {
+    targetMobile = qr.ownerMobile;
+  } else {
+    const contact = contactId
+      ? qr.emergencyContacts.find((c) => c.id === contactId)
+      : qr.emergencyContacts[0];
+    if (!contact) throw new ApiError(404, 'Emergency contact not found');
+    targetMobile = contact.mobile;
+  }
+
+  // Log so the owner can see who called
+  await logScan(qr.id, req, targetType === 'OWNER' ? 'CALL_OWNER' : 'CALL_EMERGENCY').catch(() => {});
+
+  return targetMobile;
+}
+
 /** Owner-facing Call History tab, newest first. */
 export async function listCallLogsForOwner(userId: string, qrId: string) {
   await assertQrOwnership(userId, qrId);

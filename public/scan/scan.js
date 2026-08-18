@@ -14,7 +14,6 @@
   const callStatusEl = document.getElementById('callStatus');
 
   let qrId = null;
-  let device = null;
 
   function showError(message) {
     loadingEl.classList.add('hidden');
@@ -75,7 +74,7 @@
             &#128101; Call
           </button>
         `;
-        row.querySelector('button').addEventListener('click', () => placeCall('EMERGENCY', contact.id));
+        row.querySelector('button').addEventListener('click', () => openDialer('EMERGENCY', contact.id));
         contactsListEl.appendChild(row);
       });
     }
@@ -84,60 +83,14 @@
     contentEl.classList.remove('hidden');
   }
 
-  async function placeCall(targetType, contactId) {
-    document.querySelectorAll('.btn').forEach((btn) => (btn.disabled = true));
-    setStatus('Connecting your call securely...');
-
-    try {
-      const geo = await getGeolocation();
-      const res = await fetch('/api/calls/initiate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          qrId,
-          targetType,
-          contactId,
-          latitude: geo.lat,
-          longitude: geo.lng,
-        }),
-      });
-
-      const body = await res.json();
-      if (!res.ok) {
-        throw new Error(body.message || 'Unable to place this call.');
-      }
-
-      setStatus('Alert sent. Opening secure line...');
-      await startVoiceCall(body.voiceToken, body.callLogId);
-    } catch (err) {
-      setStatus(err.message || 'Something went wrong. Please try again.');
-      document.querySelectorAll('.btn').forEach((btn) => (btn.disabled = false));
-    }
+  function openDialer(targetType, contactId) {
+    let url = `/api/calls/dial?qrId=${encodeURIComponent(qrId)}&type=${encodeURIComponent(targetType)}`;
+    if (contactId) url += `&contactId=${encodeURIComponent(contactId)}`;
+    setStatus('Opening dialer\u2026');
+    window.location.href = url;
   }
 
-  async function startVoiceCall(token, callLogId) {
-    if (!window.Twilio || !window.Twilio.Device) {
-      setStatus('Voice calling is unavailable in this browser.');
-      return;
-    }
-
-    device = new window.Twilio.Device(token, { closeProtection: true });
-
-    device.on('error', (err) => {
-      setStatus(`Call error: ${err.message}`);
-      document.querySelectorAll('.btn').forEach((btn) => (btn.disabled = false));
-    });
-
-    const connection = await device.connect({ params: { callLogId } });
-
-    connection.on('accept', () => setStatus('Connected. Stay on the line.'));
-    connection.on('disconnect', () => {
-      setStatus('Call ended.');
-      document.querySelectorAll('.btn').forEach((btn) => (btn.disabled = false));
-    });
-  }
-
-  callOwnerBtn.addEventListener('click', () => placeCall('OWNER'));
+  callOwnerBtn.addEventListener('click', () => openDialer('OWNER'));
 
   loadQrData().then(render).catch((err) => showError(err.message));
 })();
