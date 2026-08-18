@@ -5,8 +5,15 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  // DATABASE_URL   → Supabase Session-Mode pooler URL (port 5432 on pooler.supabase.com)
+  //                  OR the Transaction-Mode pooler URL (port 6543) with
+  //                  ?pgbouncer=true&connection_limit=1 appended.
+  //                  Used for all runtime queries.
+  // DIRECT_URL     → Supabase direct connection URL (db.<project>.supabase.co:5432).
+  //                  Used only for `prisma migrate` / `prisma db push`.
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 enum QrType {

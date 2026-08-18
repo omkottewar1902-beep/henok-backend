@@ -24,9 +24,11 @@ import usersRoutes from './modules/users/users.routes';
 export function createApp(): Express {
   const app = express();
 
-  // Trust exactly one hop (the load balancer/reverse proxy in front of the API in production).
-  // `true` would trust every hop and let clients spoof X-Forwarded-For to bypass IP rate limiting.
-  app.set('trust proxy', env.nodeEnv === 'production' ? 1 : false);
+  // Trust exactly one hop (Render's load balancer / any reverse proxy in front of this API).
+  // Value `1` means we trust the first X-Forwarded-For entry only, so clients cannot spoof
+  // it to bypass IP rate-limiting. Must be set unconditionally because Render injects
+  // X-Forwarded-For in all environments, not only when NODE_ENV=production.
+  app.set('trust proxy', 1);
   app.use(helmet());
   app.use(cors());
   app.use(compression());
