@@ -1,7 +1,8 @@
 generator client {
   provider      = "prisma-client-js"
-  // "native" for local/Docker dev, "rhel-openssl-3.0.x" for Vercel's Node runtime.
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+  // "native" covers local dev on Windows/macOS. "debian-openssl-3.0.x"
+  // matches the node:20-slim runtime used by the Docker/Render deploy.
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
