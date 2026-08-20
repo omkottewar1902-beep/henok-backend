@@ -29,8 +29,47 @@ export function createApp(): Express {
   // it to bypass IP rate-limiting. Must be set unconditionally because Render injects
   // X-Forwarded-For in all environments, not only when NODE_ENV=production.
   app.set('trust proxy', 1);
-  app.use(helmet());
-  app.use(cors());
+
+  // CORS runs BEFORE helmet so the preflight OPTIONS gets a proper
+  // Access-Control-Allow-Origin response and short-circuits before helmet's
+  // cross-origin policies can interfere. `origin: true` reflects the caller's
+  // Origin, which lets Flutter web dev servers on random localhost ports work
+  // out of the box while still allowing an explicit allow-list via env.
+  const corsAllowList = new Set(env.corsExtraOrigins);
+  app.use(
+    cors({
+      origin: (origin, callback) => {
+        if (!origin) return callback(null, true); // non-browser / same-origin
+        if (/^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$/i.test(origin)) {
+          return callback(null, true);
+        }
+        if (corsAllowList.has(origin) || corsAllowList.has('*')) {
+          return callback(null, true);
+        }
+        // Reflect any origin by default — this API is public-scan facing. If
+        // you need to lock this down, populate CORS_EXTRA_ORIGINS and change
+        // this fallback to `callback(new Error('Not allowed by CORS'))`.
+        return callback(null, true);
+      },
+      credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+      exposedHeaders: ['Content-Disposition'],
+      maxAge: 86400,
+    }),
+  );
+
+  // Helmet with the Cross-Origin-Resource-Policy relaxed so browsers on other
+  // origins (Flutter web, the scan page under a different host) can actually
+  // consume responses from this API. The default `same-origin` value would
+  // block cross-origin fetches even when CORS headers are correct.
+  app.use(
+    helmet({
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
+      crossOriginEmbedderPolicy: false,
+    }),
+  );
+
   app.use(compression());
   app.use(morgan(env.nodeEnv === 'development' ? 'dev' : 'combined'));
 
