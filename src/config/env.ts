@@ -24,12 +24,6 @@ export const env = {
   appName: process.env.APP_NAME ?? 'JCSafeScan',
   appBaseUrl: required('APP_BASE_URL', 'http://localhost:4000'),
   scanPublicUrl: required('SCAN_PUBLIC_URL', 'http://localhost:4000/scan'),
-  // Comma-separated list of extra allowed origins for CORS (e.g. Flutter web
-  // dev servers, staging domains). Empty by default; localhost is always allowed.
-  corsExtraOrigins: (process.env.CORS_EXTRA_ORIGINS ?? '')
-    .split(',')
-    .map((o) => o.trim())
-    .filter(Boolean),
 
   databaseUrl: required('DATABASE_URL'),
 

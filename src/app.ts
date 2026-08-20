@@ -30,27 +30,17 @@ export function createApp(): Express {
   // X-Forwarded-For in all environments, not only when NODE_ENV=production.
   app.set('trust proxy', 1);
 
-  // CORS runs BEFORE helmet so the preflight OPTIONS gets a proper
+  // CORS runs BEFORE helmet so preflight OPTIONS gets a proper
   // Access-Control-Allow-Origin response and short-circuits before helmet's
   // cross-origin policies can interfere. `origin: true` reflects the caller's
-  // Origin, which lets Flutter web dev servers on random localhost ports work
-  // out of the box while still allowing an explicit allow-list via env.
-  const corsAllowList = new Set(env.corsExtraOrigins);
+  // Origin header for every request, which covers:
+  //   - Android/iOS emulators running the native Flutter app (no CORS anyway)
+  //   - Flutter web on any localhost port
+  //   - The scan page and any hosted web frontend
+  // Lock this down later by swapping `origin: true` for an allow-list.
   app.use(
     cors({
-      origin: (origin, callback) => {
-        if (!origin) return callback(null, true); // non-browser / same-origin
-        if (/^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$/i.test(origin)) {
-          return callback(null, true);
-        }
-        if (corsAllowList.has(origin) || corsAllowList.has('*')) {
-          return callback(null, true);
-        }
-        // Reflect any origin by default — this API is public-scan facing. If
-        // you need to lock this down, populate CORS_EXTRA_ORIGINS and change
-        // this fallback to `callback(new Error('Not allowed by CORS'))`.
-        return callback(null, true);
-      },
+      origin: true,
       credentials: true,
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
