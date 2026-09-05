@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as paymentsController from './payments.controller';
-import { createCheckoutSessionSchema } from './payments.validation';
+import { createCheckoutSessionSchema, syncSessionSchema } from './payments.validation';
 import { validateBody } from '../../common/middlewares/validate';
 import { requireAuth } from '../../common/middlewares/auth.middleware';
 
@@ -42,6 +42,33 @@ router.post(
   requireAuth,
   validateBody(createCheckoutSessionSchema),
   paymentsController.createCheckoutSession,
+);
+
+/**
+ * @openapi
+ * /api/payments/sync-session:
+ *   post:
+ *     tags: [Payments]
+ *     summary: Post-redirect fallback - forces re-check of a checkout session in case the webhook is delayed
+ *     security: [{ bearerAuth: [] }]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [sessionId]
+ *             properties:
+ *               sessionId: { type: string, example: 'cs_test_...' }
+ *     responses:
+ *       200: { description: 'Sync result — { status: paid | pending | failed, qrId }' }
+ *       403: { description: 'Session does not belong to the authenticated user' }
+ */
+router.post(
+  '/sync-session',
+  requireAuth,
+  validateBody(syncSessionSchema),
+  paymentsController.syncSession,
 );
 
 /**

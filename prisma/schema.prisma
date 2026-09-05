@@ -73,6 +73,10 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // Cached Stripe Customer id so every checkout for the same user reuses the
+  // same customer record. Populated lazily on first checkout.
+  stripeCustomerId String? @unique
+
   qrCodes       Qr[]
   payments      Payment[]
   notifications Notification[]
@@ -188,7 +192,9 @@ model Payment {
   currency            String        @default("usd")
   status              PaymentStatus @default(PENDING)
   stripeSessionId     String?       @unique
-  stripePaymentIntent String?
+  // Unique so that even if a webhook fires twice for the same PI we can never
+  // create a duplicate row — the DB rejects it at write time.
+  stripePaymentIntent String?       @unique
   createdAt           DateTime      @default(now())
   updatedAt           DateTime      @updatedAt
 

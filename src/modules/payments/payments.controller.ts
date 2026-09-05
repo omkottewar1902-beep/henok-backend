@@ -20,6 +20,21 @@ export async function createCheckoutSession(req: AuthedRequest, res: Response, n
   }
 }
 
+/**
+ * Client-callable fallback for the post-redirect flow. Fetches the session
+ * fresh from Stripe and runs the same idempotent fulfillment as the webhook,
+ * so a slow webhook can't leave the QR stuck in PENDING_PAYMENT after the
+ * user is already back in the app.
+ */
+export async function syncSession(req: AuthedRequest, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const result = await paymentsService.syncSession(req.userId!, req.body.sessionId);
+    res.json(result);
+  } catch (err) {
+    next(err);
+  }
+}
+
 export async function webhook(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const signature = req.headers['stripe-signature'];

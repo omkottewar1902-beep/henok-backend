@@ -13,7 +13,17 @@ export async function initiate(req: Request, res: Response, next: NextFunction):
 
 export async function voiceWebhook(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const callLogId = req.body.callLogId as string;
+    const callLogId = req.body.callLogId as string | undefined;
+    // Twilio always expects a 200 with TwiML back — never a JSON error. If the
+    // POST is missing the callLogId param (bad TwiML app URL, direct probe, etc.)
+    // return a "cannot connect" TwiML so the caller hears a graceful hangup
+    // instead of Twilio's default "application error" prompt.
+    if (!callLogId) {
+      res
+        .type('text/xml')
+        .send('<Response><Say>This call could not be connected. Goodbye.</Say><Hangup/></Response>');
+      return;
+    }
     const twiml = await callsService.buildVoiceTwiml(callLogId);
     if (req.body.CallSid) {
       await callsService.recordCallSid(callLogId, req.body.CallSid as string);
