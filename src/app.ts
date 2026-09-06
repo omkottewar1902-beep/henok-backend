@@ -77,6 +77,16 @@ export function createApp(): Express {
     res.sendFile(path.join(__dirname, '../public/scan/index.html'));
   });
 
+  // Legal pages required for Twilio A2P 10DLC / Stripe / App Store review.
+  // Kept as plain static HTML under public/legal so they render even if the
+  // database is down.
+  app.get('/privacy', (_req, res) => {
+    res.sendFile(path.join(__dirname, '../public/legal/privacy.html'));
+  });
+  app.get('/terms', (_req, res) => {
+    res.sendFile(path.join(__dirname, '../public/legal/terms.html'));
+  });
+
   // Publicly served uploaded images (Dog/Luggage photos)
   app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 
