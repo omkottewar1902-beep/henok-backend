@@ -99,6 +99,21 @@ export function createApp(): Express {
     res.sendFile(path.join(__dirname, '../public/legal/sms-terms.html'));
   });
 
+  // Homepage waitlist form target. Persists the email to server logs for now
+  // (dev team can wire to a real store or notification service later) and
+  // returns a static thank-you page.
+  app.post('/waitlist', (req, res) => {
+    const raw = ((req.body as Record<string, unknown> | undefined)?.email ?? '').toString().trim();
+    const email = raw.slice(0, 254);
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!emailOk) {
+      res.status(400).send('Please enter a valid email address.');
+      return;
+    }
+    console.log(`[waitlist] ${new Date().toISOString()} ${email}`);
+    res.sendFile(path.join(__dirname, '../public/legal/waitlist-thanks.html'));
+  });
+
   // Publicly served uploaded images (Dog/Luggage photos)
   app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 

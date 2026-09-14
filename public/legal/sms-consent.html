@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>SMS Consent | Jcscan2connect</title>
-  <meta name="description" content="How Jcscan2connect obtains SMS opt-in consent from contacts — full double-opt-in flow with screenshots of the in-app experience." />
+  <meta name="description" content="How Jcscan2connect obtains SMS opt-in consent — every contact confirms their own number by replying YES before any alert is sent." />
   <link rel="canonical" href="https://henok-backend-r5am.onrender.com/sms-consent" />
   <style>
     :root { color-scheme: light; }
@@ -39,6 +39,16 @@
       margin: 24px 0;
     }
     .disclosure h3 { color: #1d4ed8; margin-top: 0; }
+    .callout {
+      background: #FFF7ED;
+      border: 1px solid #FED7AA;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 32px 0 24px;
+      color: #7C2D12;
+    }
+    .callout h3 { margin: 0 0 6px; color: #9A3412; font-size: 16px; }
+    .callout p { margin: 0; font-size: 14px; }
     .screenshot-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -83,18 +93,18 @@
   <header>
     <div class="wrap">
       <h1>SMS Consent &amp; Opt-in</h1>
-      <p>Jcscan2connect — How contacts opt in to receive scan alerts</p>
+      <p>Jcscan2connect &mdash; How contacts opt in to receive scan alerts</p>
     </div>
   </header>
 
   <main>
-    <p class="meta">Last updated: September 5, 2026</p>
+    <p class="meta">Last updated: September 14, 2026</p>
 
     <p>
       This page documents how Jcscan2connect obtains SMS opt-in consent from
       the contacts an account holder registers on a QR sticker. We use a
-      double-opt-in confirmation flow so that no phone number ever receives
-      alerts without the number holder's explicit reply.
+      double-opt-in confirmation flow, so no phone number ever receives
+      alerts without the number holder's own reply.
     </p>
 
     <div class="disclosure">
@@ -111,7 +121,7 @@
         number is deleted after 24 hours.
       </p>
       <ul>
-        <li><strong>Message frequency:</strong> scan-driven, typically 0–2 messages per month.</li>
+        <li><strong>Message frequency:</strong> scan-driven, typically 0&ndash;2 messages per month.</li>
         <li><strong>Message and data rates may apply.</strong></li>
         <li>Reply <strong>STOP</strong> at any time to stop all messages.</li>
         <li>Reply <strong>HELP</strong> for help.</li>
@@ -130,27 +140,28 @@
     <ol>
       <li>
         The account holder logs into the Jcscan2connect mobile app and opens
-        "Manage Emergency Contacts" for the QR they want to register.
+        &quot;Manage Contacts&quot; for the QR they want to register.
       </li>
       <li>
-        They tap "Add Contact" and enter the contact's name, relationship, and
+        They tap &quot;Add Contact&quot; and enter the contact's name, relationship, and
         mobile number. Before the Save button becomes enabled, the account
-        holder must tick an in-app consent checkbox that reads:
-        <em>"I confirm this person has given me permission to receive SMS alerts
-        from Jcscan2connect. I take responsibility for their consent as
-        described in the Terms of Service."</em>
+        holder must tick a consent checkbox that reads:
+        <em>&quot;I have this person's permission to send them one confirmation
+        text from Jcscan2connect.&quot;</em>
       </li>
       <li>
         On save, Jcscan2connect sends one confirmation SMS to the number:
-        <br /><code>Jcscan2connect: [Owner name] added you as a contact. Reply YES to receive scan alerts when their QR is scanned. Reply STOP to opt out. Msg&amp;data rates may apply.</code>
+        <br /><code>Jcscan2connect: Priya added you as a contact. Reply YES to receive scan alerts when their QR is scanned. Reply STOP to opt out, HELP for help. Msg&amp;data rates may apply.</code>
       </li>
       <li>
         The contact must reply <strong>YES</strong> to opt in. Only then does
-        the number become active for scan-triggered alerts.
+        the number become active for scan-triggered alerts. Until then the app
+        shows the contact as &quot;Pending&quot;.
       </li>
       <li>
         If the contact does not reply within 24 hours, their number is deleted
         from our database and they will not receive any further messages.
+        We never send a second confirmation.
       </li>
       <li>
         Once opted in, the contact receives an alert SMS <em>only</em> when the
@@ -168,34 +179,43 @@
 
     <div class="screenshot-grid">
       <div class="screenshot">
-        <!-- Replace with real screenshot: mobile/screenshots/add-contact.png -->
+        <!-- Replace with real screenshot: /legal/screenshots/add-contact.png -->
         <div class="placeholder">Add Contact screen<br/>[screenshot placeholder]</div>
-        <p class="caption">1. Owner enters name, relationship, mobile number, and ticks the mandatory consent checkbox.</p>
+        <p class="caption">1. Add Contact screen &mdash; owner enters name, relationship, and mobile number, and ticks the permission checkbox.</p>
       </div>
       <div class="screenshot">
-        <!-- Replace with real screenshot: mobile/screenshots/confirmation-sms.png -->
+        <!-- Replace with real screenshot: /legal/screenshots/confirmation-sms.png -->
         <div class="placeholder">Confirmation SMS<br/>[screenshot placeholder]</div>
-        <p class="caption">2. Contact receives one confirmation SMS asking them to reply YES.</p>
+        <p class="caption">2. Confirmation SMS &mdash; the single message the contact receives, asking them to reply YES.</p>
       </div>
       <div class="screenshot">
-        <!-- Replace with real screenshot: mobile/screenshots/alert-sms.png -->
-        <div class="placeholder">Alert SMS<br/>[screenshot placeholder]</div>
-        <p class="caption">3. After opting in, the contact receives an alert SMS whenever the QR is scanned.</p>
+        <!-- Replace with real screenshot: /legal/screenshots/pending-state.png -->
+        <div class="placeholder">Pending state<br/>[screenshot placeholder]</div>
+        <p class="caption">3. Pending state &mdash; the contact stays &quot;Pending&quot; in the app until they reply YES.</p>
       </div>
     </div>
 
     <h2>What the messages look like</h2>
-    <h3>Confirmation SMS (sent once when a contact is added)</h3>
-    <p><code>Jcscan2connect: [Owner name] added you as a contact. Reply YES to receive scan alerts when their QR is scanned. Reply STOP to opt out. Msg&amp;data rates may apply.</code></p>
 
-    <h3>Scan-alert SMS (only sent to opted-in contacts)</h3>
-    <p><code>Jcscan2connect notification: Someone scanned the QR code registered to [item]. The owner may be trying to reach you. Reply STOP to opt out.</code></p>
+    <h3>Confirmation SMS (sent once when a contact is added)</h3>
+    <p><code>Jcscan2connect: Priya added you as a contact. Reply YES to receive scan alerts when their QR is scanned. Reply STOP to opt out, HELP for help. Msg&amp;data rates may apply.</code></p>
+
+    <h3>Scan-alert SMS (only sent to opted-in contacts) &mdash; pet</h3>
+    <p><code>Jcscan2connect: The QR sticker registered to Bruno (pet) was scanned. The person who scanned it may be trying to reach the owner, and you are listed as a contact. Reply STOP to opt out, HELP for help.</code></p>
+
+    <h3>Scan-alert SMS &mdash; vehicle</h3>
+    <p><code>Jcscan2connect: The QR sticker on vehicle 7TRJ298 was scanned. The person who scanned it may be trying to reach the owner, and you are listed as a contact. Reply STOP to opt out, HELP for help.</code></p>
 
     <h3>HELP reply</h3>
-    <p><code>Jcscan2connect: Scan-alert notifications for QR-registered items. Support: support@jcscan2connect.com. Reply STOP to opt out.</code></p>
+    <p><code>Jcscan2connect: Scan alerts for QR-registered items, 0-2 msgs/mo. Support: support@jcscan2connect.com. Msg&amp;data rates may apply. Reply STOP to opt out.</code></p>
 
     <h3>STOP reply</h3>
     <p><code>Jcscan2connect: You have been unsubscribed and will not receive further messages. Reply START to opt back in.</code></p>
+
+    <div class="callout">
+      <h3>Not an emergency service</h3>
+      <p>Jcscan2connect is a communication tool between a finder and an owner. We do not send emergency or public-safety alerts, and we do not contact police, fire, ambulance, or any other agency. In an emergency, call 911.</p>
+    </div>
 
     <h2>Questions</h2>
     <p>
