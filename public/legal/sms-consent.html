@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SMS Consent | Jcscan2connect</title>
+  <meta name="description" content="How Jcscan2connect obtains SMS opt-in consent from contacts — full double-opt-in flow with screenshots of the in-app experience." />
+  <link rel="canonical" href="https://henok-backend-r5am.onrender.com/sms-consent" />
+  <style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      margin: 0;
+      color: #14100c;
+      background: #fafafa;
+      line-height: 1.6;
+    }
+    header {
+      background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%);
+      color: #fff;
+      padding: 32px 24px;
+    }
+    header .wrap { max-width: 780px; margin: 0 auto; }
+    header h1 { margin: 0 0 4px; font-size: 28px; font-weight: 800; letter-spacing: -0.4px; }
+    header p { margin: 0; opacity: 0.9; font-size: 14px; }
+    main { max-width: 780px; margin: 0 auto; padding: 32px 24px 64px; background: #fff; }
+    h2 { font-size: 20px; margin-top: 32px; margin-bottom: 8px; color: #1d4ed8; }
+    h3 { font-size: 16px; margin-top: 20px; margin-bottom: 6px; }
+    p, li { font-size: 15px; }
+    ul, ol { padding-left: 22px; }
+    a { color: #1d4ed8; }
+    .meta { color: #6b7280; font-size: 13px; margin-bottom: 24px; }
+    .disclosure {
+      background: #F8FAFF;
+      border: 1px solid #DBEAFE;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 24px 0;
+    }
+    .disclosure h3 { color: #1d4ed8; margin-top: 0; }
+    .screenshot-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+    .screenshot {
+      border: 1px dashed #cbd5e1;
+      border-radius: 10px;
+      padding: 16px;
+      background: #fff;
+      text-align: center;
+    }
+    .screenshot img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 6px;
+      display: block;
+      margin: 0 auto 10px;
+    }
+    .screenshot .placeholder {
+      height: 260px;
+      background: #f1f5f9;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #94a3b8;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+    .screenshot .caption {
+      color: #6b7280;
+      font-size: 13px;
+      margin: 0;
+    }
+    footer { max-width: 780px; margin: 0 auto; padding: 24px; color: #6b7280; font-size: 13px; border-top: 1px solid #e5e7eb; }
+    code { background: #f1f5f9; padding: 1px 6px; border-radius: 4px; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>SMS Consent &amp; Opt-in</h1>
+      <p>Jcscan2connect — How contacts opt in to receive scan alerts</p>
+    </div>
+  </header>
+
+  <main>
+    <p class="meta">Last updated: September 5, 2026</p>
+
+    <p>
+      This page documents how Jcscan2connect obtains SMS opt-in consent from
+      the contacts an account holder registers on a QR sticker. We use a
+      double-opt-in confirmation flow so that no phone number ever receives
+      alerts without the number holder's explicit reply.
+    </p>
+
+    <div class="disclosure">
+      <h3>Jcscan2connect QR Scan Alerts</h3>
+      <p>
+        When someone scans a Jcscan2connect QR sticker, we send an SMS to the
+        contacts registered to that sticker.
+      </p>
+      <p>
+        <strong>You will only receive these messages if you confirm your own
+        number.</strong> When an account holder adds your number, you receive
+        one confirmation SMS. You must reply <strong>YES</strong> to receive
+        alerts. If you do not reply, we do not message you again and your
+        number is deleted after 24 hours.
+      </p>
+      <ul>
+        <li><strong>Message frequency:</strong> scan-driven, typically 0–2 messages per month.</li>
+        <li><strong>Message and data rates may apply.</strong></li>
+        <li>Reply <strong>STOP</strong> at any time to stop all messages.</li>
+        <li>Reply <strong>HELP</strong> for help.</li>
+        <li>Support: <a href="mailto:support@jcscan2connect.com">support@jcscan2connect.com</a></li>
+      </ul>
+      <p>
+        <strong>No mobile information will be shared with third parties or
+        affiliates for marketing or promotional purposes.</strong>
+      </p>
+      <p style="margin-bottom:0;">
+        <a href="/sms-terms">SMS Terms</a> &middot; <a href="/privacy">Privacy Policy</a>
+      </p>
+    </div>
+
+    <h2>The double-opt-in flow, step by step</h2>
+    <ol>
+      <li>
+        The account holder logs into the Jcscan2connect mobile app and opens
+        "Manage Emergency Contacts" for the QR they want to register.
+      </li>
+      <li>
+        They tap "Add Contact" and enter the contact's name, relationship, and
+        mobile number. Before the Save button becomes enabled, the account
+        holder must tick an in-app consent checkbox that reads:
+        <em>"I confirm this person has given me permission to receive SMS alerts
+        from Jcscan2connect. I take responsibility for their consent as
+        described in the Terms of Service."</em>
+      </li>
+      <li>
+        On save, Jcscan2connect sends one confirmation SMS to the number:
+        <br /><code>Jcscan2connect: [Owner name] added you as a contact. Reply YES to receive scan alerts when their QR is scanned. Reply STOP to opt out. Msg&amp;data rates may apply.</code>
+      </li>
+      <li>
+        The contact must reply <strong>YES</strong> to opt in. Only then does
+        the number become active for scan-triggered alerts.
+      </li>
+      <li>
+        If the contact does not reply within 24 hours, their number is deleted
+        from our database and they will not receive any further messages.
+      </li>
+      <li>
+        Once opted in, the contact receives an alert SMS <em>only</em> when the
+        account holder's QR sticker is physically scanned by a third party.
+        They can reply <strong>STOP</strong> at any time to opt out immediately.
+      </li>
+    </ol>
+
+    <h2>Screenshots of the in-app consent flow</h2>
+    <p>
+      The three images below show the account holder's experience in the
+      Jcscan2connect mobile app when adding a contact, along with the
+      confirmation SMS that the contact receives.
+    </p>
+
+    <div class="screenshot-grid">
+      <div class="screenshot">
+        <!-- Replace with real screenshot: mobile/screenshots/add-contact.png -->
+        <div class="placeholder">Add Contact screen<br/>[screenshot placeholder]</div>
+        <p class="caption">1. Owner enters name, relationship, mobile number, and ticks the mandatory consent checkbox.</p>
+      </div>
+      <div class="screenshot">
+        <!-- Replace with real screenshot: mobile/screenshots/confirmation-sms.png -->
+        <div class="placeholder">Confirmation SMS<br/>[screenshot placeholder]</div>
+        <p class="caption">2. Contact receives one confirmation SMS asking them to reply YES.</p>
+      </div>
+      <div class="screenshot">
+        <!-- Replace with real screenshot: mobile/screenshots/alert-sms.png -->
+        <div class="placeholder">Alert SMS<br/>[screenshot placeholder]</div>
+        <p class="caption">3. After opting in, the contact receives an alert SMS whenever the QR is scanned.</p>
+      </div>
+    </div>
+
+    <h2>What the messages look like</h2>
+    <h3>Confirmation SMS (sent once when a contact is added)</h3>
+    <p><code>Jcscan2connect: [Owner name] added you as a contact. Reply YES to receive scan alerts when their QR is scanned. Reply STOP to opt out. Msg&amp;data rates may apply.</code></p>
+
+    <h3>Scan-alert SMS (only sent to opted-in contacts)</h3>
+    <p><code>Jcscan2connect notification: Someone scanned the QR code registered to [item]. The owner may be trying to reach you. Reply STOP to opt out.</code></p>
+
+    <h3>HELP reply</h3>
+    <p><code>Jcscan2connect: Scan-alert notifications for QR-registered items. Support: support@jcscan2connect.com. Reply STOP to opt out.</code></p>
+
+    <h3>STOP reply</h3>
+    <p><code>Jcscan2connect: You have been unsubscribed and will not receive further messages. Reply START to opt back in.</code></p>
+
+    <h2>Questions</h2>
+    <p>
+      Contact us at <a href="mailto:support@jcscan2connect.com">support@jcscan2connect.com</a>
+      or write to Jcscan2connect, 2220 Fraser St, Aurora, CO 80014, USA.
+    </p>
+  </main>
+
+  <footer>
+    &copy; 2026 Jcscan2connect &middot;
+    <a href="/">Home</a> &middot;
+    <a href="/sms-terms">SMS Terms</a> &middot;
+    <a href="/privacy">Privacy Policy</a> &middot;
+    <a href="/terms">Terms &amp; Conditions</a> &middot;
+    <a href="mailto:support@jcscan2connect.com">Support</a>
+  </footer>
+</body>
+</html>

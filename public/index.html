@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Jcscan2connect &mdash; QR stickers that put strangers in touch with owners</title>
+  <meta name="description" content="Jcscan2connect turns a scan of your QR sticker into a masked call to the owner or a pre-registered contact — for cars, pets, luggage, and valuables. No phone numbers exposed." />
+  <link rel="canonical" href="https://henok-backend-r5am.onrender.com/" />
+  <style>
+    :root { color-scheme: light; --blue:#1D4ED8; --blue-light:#3B82F6; --gold:#FACC15; --ink:#0F1724; --muted:#6B7280; --cream:#FDFBF6; --border:#E5E7EB; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif; color:var(--ink); background:#fff; line-height:1.6; }
+    a { color: var(--blue); }
+    header.nav { position:sticky; top:0; z-index:10; background:rgba(255,255,255,0.9); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+    header.nav .row { display:flex; align-items:center; justify-content:space-between; padding:14px 0; }
+    .brand { font-weight:800; font-size:17px; letter-spacing:-0.2px; }
+    .brand span { color: var(--blue); }
+    nav.links a { margin-left:20px; text-decoration:none; color:var(--ink); font-weight:500; font-size:14px; }
+    nav.links a:hover { color: var(--blue); }
+    .hero { padding: 72px 0 56px; background: linear-gradient(180deg, #F8FAFF 0%, #fff 100%); }
+    .hero h1 { font-size:44px; line-height:1.1; letter-spacing:-1px; margin:0 0 16px; font-weight:800; }
+    .hero .lead { font-size:18px; color:var(--muted); max-width:640px; margin:0 0 28px; }
+    .cta-row { display:flex; gap:12px; flex-wrap:wrap; }
+    .btn { display:inline-block; padding:12px 22px; border-radius:12px; font-weight:700; font-size:15px; text-decoration:none; border:none; cursor:pointer; }
+    .btn-primary { background: var(--blue); color:#fff; }
+    .btn-primary:hover { background: var(--blue-light); }
+    .btn-ghost { background: #fff; color: var(--blue); border:1.5px solid var(--border); }
+    .btn-ghost:hover { border-color: var(--blue); }
+    section { padding: 56px 0; border-top: 1px solid var(--border); }
+    section h2 { font-size:28px; margin:0 0 8px; letter-spacing:-0.4px; }
+    section p.sub { color: var(--muted); font-size:15px; margin:0 0 32px; max-width:680px; }
+    .grid3 { display:grid; grid-template-columns: repeat(3, 1fr); gap:20px; }
+    .card { border:1px solid var(--border); border-radius:16px; padding:22px; background:#fff; }
+    .card h3 { margin:0 0 6px; font-size:17px; }
+    .card p { margin:0; color:var(--muted); font-size:14px; }
+    .num { display:inline-block; background:var(--gold); color:var(--ink); font-weight:800; width:28px; height:28px; border-radius:50%; text-align:center; line-height:28px; font-size:14px; margin-bottom:10px; }
+    .grid2 { display:grid; grid-template-columns: 1.2fr 1fr; gap:32px; align-items:center; }
+    .stripe { background: var(--cream); border-radius:20px; padding: 36px 32px; }
+    footer { padding: 40px 0 64px; border-top:1px solid var(--border); background:#fafafa; color:var(--muted); font-size:13px; }
+    footer .row { display:flex; justify-content:space-between; flex-wrap:wrap; gap:16px; }
+    footer a { color: var(--blue); text-decoration:none; margin-right:14px; }
+    @media (max-width: 720px) {
+      .hero h1 { font-size:32px; }
+      .grid3, .grid2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="wrap row">
+      <div class="brand">Jcscan<span>2connect</span></div>
+      <nav class="links">
+        <a href="/sms-consent">SMS Consent</a>
+        <a href="/sms-terms">SMS Terms</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/terms">Terms</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="wrap">
+      <h1>QR stickers that put strangers in touch with owners &mdash; without exposing phone numbers.</h1>
+      <p class="lead">Jcscan2connect gives you an emergency QR sticker for your car, pet, luggage, or valuables. When a finder scans it, they can reach you (or the people you trust) with a single tap. Real numbers are never revealed.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="mailto:support@jcscan2connect.com?subject=Jcscan2connect%20order">Get a QR sticker</a>
+        <a class="btn btn-ghost" href="#how">See how it works</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <h2>How it works</h2>
+      <p class="sub">Three steps. Owner and finder both stay private.</p>
+      <div class="grid3">
+        <div class="card">
+          <div class="num">1</div>
+          <h3>Stick it</h3>
+          <p>Peel and apply the QR sticker to your car, pet tag, luggage, laptop, or bike. Each sticker is unique to your account.</p>
+        </div>
+        <div class="card">
+          <div class="num">2</div>
+          <h3>Scan</h3>
+          <p>A finder points any phone camera at the sticker. A safe web page opens — no download needed.</p>
+        </div>
+        <div class="card">
+          <div class="num">3</div>
+          <h3>Call</h3>
+          <p>They tap "Call Owner" and their native dialer opens. Your registered contacts stay in the loop, phone numbers never travel through the browser.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap stripe">
+      <div class="grid2">
+        <div>
+          <h2>Alerts to the people who matter</h2>
+          <p class="sub">You register up to three contacts when you activate a QR. When your sticker is scanned, we can notify those contacts by SMS so they know a scan happened, even if the finder never taps "Call". Contacts opt in themselves through a double-opt-in confirmation before they receive any alerts.</p>
+          <a class="btn btn-primary" href="/sms-consent">Read the SMS opt-in details</a>
+        </div>
+        <div class="card" style="background:#fff;">
+          <h3 style="color:var(--blue);">Message flow</h3>
+          <ol style="padding-left:20px; margin:12px 0; color:var(--muted); font-size:14px;">
+            <li>Owner adds a contact's number in the app with a digital consent checkbox.</li>
+            <li>Contact receives one confirmation SMS.</li>
+            <li>Contact replies <strong>YES</strong> to opt in — or the number is deleted after 24 h.</li>
+            <li>From then on, contact receives an alert only when the QR is scanned. Reply <strong>STOP</strong> anytime to opt out.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>What it's for</h2>
+      <p class="sub">Sticker use cases we've built for.</p>
+      <div class="grid3">
+        <div class="card"><h3>&#128663; Cars</h3><p>Blocked parking, minor bumps, lights left on, or an accident. A finder can reach you in seconds without leaving a note.</p></div>
+        <div class="card"><h3>&#128021; Pets</h3><p>Slip the QR onto a collar tag. If your pet is found, the finder is one tap away from you and your family.</p></div>
+        <div class="card"><h3>&#128188; Luggage &amp; valuables</h3><p>Bags, laptops, bikes, keys. Turn "found something" into "returned to owner" without exposing your number publicly.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>About Jcscan2connect</h2>
+      <p class="sub" style="max-width:720px;">Jcscan2connect is a sole proprietorship registered at 2220 Fraser St, Aurora, CO 80014, United States. We build the emergency QR sticker service and operate the accompanying mobile app. Reach us at <a href="mailto:support@jcscan2connect.com">support@jcscan2connect.com</a>.</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap row">
+      <div>&copy; 2026 Jcscan2connect &middot; 2220 Fraser St, Aurora, CO 80014</div>
+      <div>
+        <a href="/sms-consent">SMS Consent</a>
+        <a href="/sms-terms">SMS Terms</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/terms">Terms</a>
+        <a href="mailto:support@jcscan2connect.com">Support</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
