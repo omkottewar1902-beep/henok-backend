@@ -95,6 +95,9 @@ export function createApp(): Express {
   app.get('/sms-consent', (_req, res) => {
     res.sendFile(path.join(__dirname, '../public/legal/sms-consent.html'));
   });
+  // Screenshots embedded in /sms-consent (A2P 10DLC evidence). Scoped to this
+  // subfolder so raw legal .html files stay behind their pretty routes.
+  app.use('/legal/screenshots', express.static(path.join(__dirname, '../public/legal/screenshots')));
   app.get('/sms-terms', (_req, res) => {
     res.sendFile(path.join(__dirname, '../public/legal/sms-terms.html'));
   });
