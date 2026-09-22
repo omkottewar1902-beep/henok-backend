@@ -60,12 +60,18 @@ export async function initiateCall(input: InitiateCallInput, req: Request) {
 
   // SMS must go out before the call is connected - send it now, before the browser
   // even opens the Twilio Voice SDK connection.
+  // Prefer sending via the A2P-registered Messaging Service (Sender Pool +
+  // STOP/HELP handling from the campaign). Falls back to the raw From number
+  // if the MG SID isn't configured (e.g. local dev).
+  const smsSender = env.twilioMessagingServiceSid
+    ? { messagingServiceSid: env.twilioMessagingServiceSid }
+    : { from: env.twilioMessagingFromNumber };
   await Promise.all(
     smsRecipients.map((to) =>
       twilioClient.messages.create({
         to,
-        from: env.twilioMessagingFromNumber,
         body: smsBody,
+        ...smsSender,
       }),
     ),
   );

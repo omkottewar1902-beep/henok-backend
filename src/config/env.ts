@@ -43,6 +43,11 @@ export const env = {
   twilioTwimlAppSid: required('TWILIO_TWIML_APP_SID', 'APplaceholder'),
   twilioCallerIdNumber: required('TWILIO_CALLER_ID_NUMBER', '+15005550006'),
   twilioMessagingFromNumber: required('TWILIO_MESSAGING_FROM_NUMBER', '+15005550006'),
+  // Preferred sender for outbound SMS. When set to a Messaging Service SID
+  // (MG...), the SMS is sent via the A2P-registered service and Twilio picks
+  // the right number from the Sender Pool + applies STOP/HELP handling. Falls
+  // back to `twilioMessagingFromNumber` when empty (dev/local).
+  twilioMessagingServiceSid: process.env.TWILIO_MESSAGING_SERVICE_SID ?? '',
 
   rateLimitWindowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS ?? '60000', 10),
   rateLimitMax: parseInt(process.env.RATE_LIMIT_MAX ?? '100', 10),
