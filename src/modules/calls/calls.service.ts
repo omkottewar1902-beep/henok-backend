@@ -39,10 +39,15 @@ export async function initiateCall(input: InitiateCallInput, req: Request) {
   let smsRecipients: string[];
   let smsBody: string;
 
+  // Wording matches the sample messages registered in the Twilio A2P 10DLC
+  // campaign for "Jcscan2connect" (Sole Prop). Carriers spot-audit real
+  // traffic against registered samples — if the body drifts away from
+  // "Jcscan2connect notification:" / "The QR sticker ... was scanned",
+  // the campaign can be paused.
   if (input.targetType === 'OWNER') {
     targetMobile = qr.ownerMobile;
     smsRecipients = [qr.ownerMobile];
-    smsBody = `Someone has scanned your ${env.appName} QR for ${label} and is trying to contact you.`;
+    smsBody = `Jcscan2connect: The QR sticker registered to ${label} was scanned. The person who scanned it may be trying to reach you. Reply STOP to opt out, HELP for help.`;
   } else {
     if (qr.emergencyContacts.length === 0) {
       throw new ApiError(400, 'This QR has no emergency contacts configured');
@@ -55,7 +60,7 @@ export async function initiateCall(input: InitiateCallInput, req: Request) {
     }
     targetMobile = contact.mobile;
     smsRecipients = qr.emergencyContacts.map((c) => c.mobile);
-    smsBody = `Emergency Alert! Someone scanned the ${env.appName} QR for ${label} and is trying to contact the emergency contact.`;
+    smsBody = `Jcscan2connect: The QR sticker registered to ${label} was scanned. The person who scanned it may be trying to reach the owner, and you are listed as a contact. Reply STOP to opt out, HELP for help.`;
   }
 
   // SMS must go out before the call is connected - send it now, before the browser

@@ -7,6 +7,7 @@ import path from 'path';
 import swaggerUi from 'swagger-ui-express';
 
 import { env } from './config/env';
+import { prisma } from './config/db';
 import { swaggerSpec } from './swagger/swagger';
 import { defaultLimiter } from './common/middlewares/rateLimiter';
 import { notFoundHandler, errorHandler } from './common/middlewares/error.middleware';
@@ -123,6 +124,85 @@ export function createApp(): Express {
   app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
   app.get('/health', (req, res) => res.json({ status: 'ok', app: env.appName }));
+
+  // Temporary admin seeding endpoint — creates an ACTIVE test QR bypassing
+  // Stripe. Guarded by the ADMIN_SEED_TOKEN env var; returns 404 if the env
+  // var isn't set OR the X-Admin-Token header doesn't match. Remove the env
+  // var (and this route) once testing is done.
+  app.post('/api/admin/seed-test-qr', async (req, res, next) => {
+    try {
+      const expected = env.adminSeedToken;
+      const provided = req.headers['x-admin-token'];
+      if (!expected || provided !== expected) {
+        res.status(404).json({ message: "We couldn't find what you were looking for." });
+        return;
+      }
+
+      const ownerName = 'Michael Thompson';
+      const ownerMobile = '+19168336757';
+      const ownerEmail = 'michael.thompson@jcscan2connect.com';
+
+      const user = await prisma.user.upsert({
+        where: { mobile: ownerMobile },
+        update: { fullName: ownerName, email: ownerEmail },
+        create: { fullName: ownerName, email: ownerEmail, mobile: ownerMobile },
+      });
+
+      const seqRows = await prisma.$queryRaw<Array<{ nextval: bigint }>>`
+        SELECT nextval('qr_extension_number_seq') AS nextval
+      `;
+      const extensionNumber = seqRows[0].nextval.toString().padStart(5, '0');
+
+      const qr = await prisma.qr.create({
+        data: {
+          type: 'CAR',
+          status: 'ACTIVE',
+          extensionNumber,
+          ownerName,
+          ownerMobile,
+          ownerEmail,
+          addressLine1: '2220 Fraser St',
+          addressLine2: null,
+          city: 'Aurora',
+          state: 'CO',
+          zipCode: '80014',
+          userId: user.id,
+          vehicle: {
+            create: {
+              vehicleNumber: 'CO-TEST-916',
+              vehicleColor: 'Silver',
+              speedAlertEnabled: false,
+            },
+          },
+          emergencyContacts: {
+            create: [
+              {
+                name: 'Secondary Contact',
+                relationship: 'Friend',
+                mobile: ownerMobile,
+              },
+            ],
+          },
+        },
+        include: { vehicle: true, emergencyContacts: true },
+      });
+
+      const scanUrl = `${env.appBaseUrl}/scan/${qr.uniqueCode}`;
+      res.json({
+        qrId: qr.id,
+        uniqueCode: qr.uniqueCode,
+        extensionNumber: qr.extensionNumber,
+        status: qr.status,
+        ownerName: qr.ownerName,
+        ownerMobile: qr.ownerMobile,
+        vehicle: qr.vehicle?.vehicleNumber,
+        contacts: qr.emergencyContacts.length,
+        scanUrl,
+      });
+    } catch (err) {
+      next(err);
+    }
+  });
 
   app.use('/api/auth', authRoutes);
   app.use('/api/qr', qrRoutes);

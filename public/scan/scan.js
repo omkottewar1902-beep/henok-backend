@@ -14,6 +14,10 @@
   const callStatusEl = document.getElementById('callStatus');
 
   let qrId = null;
+  let device = null;
+  let activeCall = null;
+
+  // ─── UI helpers ───────────────────────────────────────────────────────────
 
   function showError(message) {
     loadingEl.classList.add('hidden');
@@ -26,6 +30,34 @@
     callStatusEl.textContent = message;
     callStatusEl.classList.remove('hidden');
   }
+
+  function setButtonsDisabled(disabled) {
+    document.querySelectorAll('.btn').forEach((btn) => {
+      btn.disabled = disabled;
+    });
+  }
+
+  function ensureEndCallButton() {
+    let endBtn = document.getElementById('endCallBtn');
+    if (endBtn) return endBtn;
+    endBtn = document.createElement('button');
+    endBtn.id = 'endCallBtn';
+    endBtn.className = 'btn btn-secondary';
+    endBtn.textContent = 'End call';
+    endBtn.style.marginTop = '10px';
+    endBtn.addEventListener('click', () => {
+      if (activeCall) activeCall.disconnect();
+    });
+    callStatusEl.insertAdjacentElement('afterend', endBtn);
+    return endBtn;
+  }
+
+  function hideEndCallButton() {
+    const b = document.getElementById('endCallBtn');
+    if (b) b.remove();
+  }
+
+  // ─── Data loading ─────────────────────────────────────────────────────────
 
   function getGeolocation() {
     return new Promise((resolve) => {
@@ -74,7 +106,9 @@
             &#128101; Call
           </button>
         `;
-        row.querySelector('button').addEventListener('click', () => openDialer('EMERGENCY', contact.id));
+        row.querySelector('button').addEventListener('click', () =>
+          placeMaskedCall('EMERGENCY', contact.id),
+        );
         contactsListEl.appendChild(row);
       });
     }
@@ -83,14 +117,125 @@
     contentEl.classList.remove('hidden');
   }
 
-  function openDialer(targetType, contactId) {
-    let url = `/api/calls/dial?qrId=${encodeURIComponent(qrId)}&type=${encodeURIComponent(targetType)}`;
-    if (contactId) url += `&contactId=${encodeURIComponent(contactId)}`;
-    setStatus('Opening dialer\u2026');
-    window.location.href = url;
+  // ─── Masked call flow (Twilio Voice SDK) ──────────────────────────────────
+
+  async function placeMaskedCall(targetType, contactId) {
+    if (!window.Twilio || !window.Twilio.Device) {
+      setStatus('Masked calling is not supported in this browser. Please try Chrome, Safari, or Firefox.');
+      return;
+    }
+    if (activeCall) {
+      // Prevent double-click while a call is already in progress.
+      return;
+    }
+
+    setButtonsDisabled(true);
+    setStatus('Requesting microphone permission…');
+
+    try {
+      // Trigger the browser's mic permission prompt up front. This also
+      // primes the audio context so the incoming call audio autoplays.
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+
+      setStatus('Alerting the owner…');
+
+      const geo = await getGeolocation();
+      const initiateRes = await fetch('/api/calls/initiate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          qrId,
+          targetType,
+          contactId,
+          latitude: geo.lat,
+          longitude: geo.lng,
+        }),
+      });
+
+      const initiateBody = await initiateRes.json();
+      if (!initiateRes.ok) {
+        throw new Error(initiateBody.message || 'Unable to place this call.');
+      }
+
+      const { voiceToken, callLogId } = initiateBody;
+
+      setStatus('Connecting a secure line…');
+      await connectVoice(voiceToken, callLogId);
+    } catch (err) {
+      setStatus(friendlyError(err));
+      cleanupCall();
+    }
   }
 
-  callOwnerBtn.addEventListener('click', () => openDialer('OWNER'));
+  async function connectVoice(token, callLogId) {
+    // Tear down any previous Device instance from an earlier attempt.
+    if (device) {
+      try { device.destroy(); } catch (_) { /* noop */ }
+      device = null;
+    }
+
+    device = new window.Twilio.Device(token, {
+      logLevel: 'warn',
+      codecPreferences: ['opus', 'pcmu'],
+      closeProtection: true,
+    });
+
+    device.on('error', (twilioError) => {
+      setStatus(`Call error: ${twilioError.message || 'unknown'}`);
+      cleanupCall();
+    });
+
+    // Kick off the outgoing call. Twilio will POST to /api/calls/voice-webhook
+    // with `callLogId` in the body; our webhook returns TwiML that dials the
+    // resolved owner / contact number and bridges the browser to the callee.
+    activeCall = await device.connect({ params: { callLogId } });
+
+    activeCall.on('accept', () => {
+      setStatus('Connected. Stay on the line.');
+      ensureEndCallButton();
+    });
+    activeCall.on('reject', () => {
+      setStatus('Owner declined the call.');
+      cleanupCall();
+    });
+    activeCall.on('cancel', () => {
+      setStatus('Call cancelled.');
+      cleanupCall();
+    });
+    activeCall.on('disconnect', () => {
+      setStatus('Call ended.');
+      cleanupCall();
+    });
+    activeCall.on('error', (twilioError) => {
+      setStatus(`Call error: ${twilioError.message || 'unknown'}`);
+      cleanupCall();
+    });
+  }
+
+  function cleanupCall() {
+    activeCall = null;
+    hideEndCallButton();
+    setButtonsDisabled(false);
+    if (device) {
+      try { device.destroy(); } catch (_) { /* noop */ }
+      device = null;
+    }
+  }
+
+  function friendlyError(err) {
+    if (!err) return 'Something went wrong.';
+    if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+      return 'Microphone access was blocked. Please allow the mic and try again.';
+    }
+    if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+      return 'No microphone detected on this device.';
+    }
+    return err.message || 'Something went wrong.';
+  }
+
+  // ─── Wiring ───────────────────────────────────────────────────────────────
+
+  callOwnerBtn.addEventListener('click', () => placeMaskedCall('OWNER'));
 
   loadQrData().then(render).catch((err) => showError(err.message));
 })();

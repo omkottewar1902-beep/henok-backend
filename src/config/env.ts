@@ -51,4 +51,9 @@ export const env = {
 
   rateLimitWindowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS ?? '60000', 10),
   rateLimitMax: parseInt(process.env.RATE_LIMIT_MAX ?? '100', 10),
+
+  // Optional. When set, POST /api/admin/seed-test-qr becomes available and
+  // requires this string in the X-Admin-Token header. Leave unset in prod
+  // (route returns 404) except for one-off test seeding.
+  adminSeedToken: process.env.ADMIN_SEED_TOKEN ?? '',
 };
