@@ -200,7 +200,16 @@ export function createApp(): Express {
         scanUrl,
       });
     } catch (err) {
-      next(err);
+      // Admin-token-guarded route — safe to return the raw error message so
+      // we can debug without shell access to Render logs.
+      const e = err as { name?: string; code?: string; meta?: unknown; message?: string; stack?: string };
+      console.error('[admin/seed-test-qr]', e);
+      res.status(500).json({
+        error: e.name ?? 'Error',
+        code: e.code,
+        message: e.message ?? String(err),
+        meta: e.meta,
+      });
     }
   });
 
