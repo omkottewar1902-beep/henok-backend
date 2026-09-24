@@ -52,10 +52,33 @@ export function createApp(): Express {
 
   // Helmet with the Cross-Origin-Resource-Policy relaxed so browsers on other
   // origins (Flutter web, the scan page under a different host) can actually
-  // consume responses from this API. The default `same-origin` value would
-  // block cross-origin fetches even when CORS headers are correct.
+  // consume responses from this API. Also whitelist the Twilio Voice SDK
+  // origins in CSP so the scan page's masked-call flow can load `twilio.min.js`
+  // from sdk.twilio.com and open the WebSocket to twilio.com for audio.
   app.use(
     helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          baseUri: ["'self'"],
+          fontSrc: ["'self'", 'https:', 'data:'],
+          formAction: ["'self'"],
+          frameAncestors: ["'self'"],
+          imgSrc: ["'self'", 'data:', 'blob:'],
+          objectSrc: ["'none'"],
+          scriptSrc: ["'self'", 'https://sdk.twilio.com'],
+          scriptSrcAttr: ["'none'"],
+          styleSrc: ["'self'", 'https:', "'unsafe-inline'"],
+          // Twilio Voice SDK opens a signalling WebSocket to *.twilio.com and
+          // fetches ICE server config over HTTPS from the same origin.
+          connectSrc: ["'self'", 'https://*.twilio.com', 'wss://*.twilio.com'],
+          // Audio streams from the SDK are exposed as blob URLs; some SDK
+          // versions also spin up a Web Worker from a blob for jitter buffer.
+          mediaSrc: ["'self'", 'blob:'],
+          workerSrc: ["'self'", 'blob:'],
+          upgradeInsecureRequests: [],
+        },
+      },
       crossOriginResourcePolicy: { policy: 'cross-origin' },
       crossOriginEmbedderPolicy: false,
     }),
