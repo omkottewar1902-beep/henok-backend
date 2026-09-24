@@ -120,6 +120,13 @@ function buildVoiceAccessToken(): string {
 
   const token = new AccessToken(env.twilioAccountSid, env.twilioApiKeySid, env.twilioApiKeySecret, { identity });
   token.addGrant(voiceGrant);
+
+  // Log the shape of what we're about to hand the browser so 53000 signaling
+  // failures can be traced to bad SID / API-Key mismatch / stale TwiML App.
+  console.log(
+    `[voice-token] identity=${identity}  accountSid=${env.twilioAccountSid.slice(0, 6)}…${env.twilioAccountSid.slice(-4)}  apiKey=${env.twilioApiKeySid.slice(0, 6)}…  twimlApp=${env.twilioTwimlAppSid.slice(0, 6)}…`,
+  );
+
   return token.toJwt();
 }
 
