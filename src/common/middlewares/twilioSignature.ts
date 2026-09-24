@@ -21,7 +21,15 @@ export function verifyTwilioSignature(req: Request, res: Response, next: NextFun
     return;
   }
 
-  const signature = req.headers['x-twilio-signature'];
+  // Check every plausible casing / proxy-prefixed variant Twilio's signature
+  // header might arrive under after passing through Cloudflare and Render.
+  const rawSig =
+    (req.headers['x-twilio-signature'] as string | undefined) ??
+    (req.headers['X-Twilio-Signature'] as string | undefined) ??
+    (req.headers['twilio-signature'] as string | undefined) ??
+    (req.headers['x-original-twilio-signature'] as string | undefined);
+  const signature = Array.isArray(rawSig) ? rawSig[0] : rawSig;
+
   const host = req.get('host');
   const proto = req.protocol;
   const fullUrl = `${proto}://${host}${req.originalUrl}`;
@@ -36,8 +44,13 @@ export function verifyTwilioSignature(req: Request, res: Response, next: NextFun
     );
 
   if (!isValid) {
+    // Dump every header + body key so we can see exactly what Cloudflare/Render
+    // is forwarding. If X-Twilio-Signature is genuinely absent from this list,
+    // the proxy stripped it and we need to swap to `webhook()` (a Twilio
+    // helper that also accepts a shared secret in the body).
+    const headerList = Object.keys(req.headers).sort().join(',');
     console.warn(
-      `[twilio-signature] REJECT  url=${fullUrl}  sig=${typeof signature === 'string' ? signature.slice(0, 12) + '…' : 'missing'}  bodyKeys=[${Object.keys(req.body ?? {}).join(',')}]`,
+      `[twilio-signature] REJECT  url=${fullUrl}  sig=${typeof signature === 'string' ? signature.slice(0, 12) + '…' : 'missing'}  bodyKeys=[${Object.keys(req.body ?? {}).join(',')}]  headers=[${headerList}]`,
     );
     res.status(403).json({ message: 'Invalid Twilio signature' });
     return;
