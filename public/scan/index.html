@@ -41,7 +41,10 @@
     <div id="errorState" class="state hidden"></div>
   </main>
 
-  <script src="https://sdk.twilio.com/js/voice/releases/2.11.1/twilio.min.js"></script>
+  <!-- Twilio Voice SDK v2.11.1 (self-hosted; there is no official Twilio CDN
+       for v2). File lives at public/scan/twilio.min.js and is served by the
+       static /scan mount in app.ts. -->
+  <script src="/scan/twilio.min.js"></script>
   <script src="/scan/scan.js"></script>
 </body>
 </html>

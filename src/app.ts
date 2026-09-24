@@ -66,7 +66,7 @@ export function createApp(): Express {
           frameAncestors: ["'self'"],
           imgSrc: ["'self'", 'data:', 'blob:'],
           objectSrc: ["'none'"],
-          scriptSrc: ["'self'", 'https://sdk.twilio.com'],
+          scriptSrc: ["'self'"],
           scriptSrcAttr: ["'none'"],
           styleSrc: ["'self'", 'https:', "'unsafe-inline'"],
           // Twilio Voice SDK opens a signalling WebSocket to *.twilio.com and
