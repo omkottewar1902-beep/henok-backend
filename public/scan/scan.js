@@ -1,6 +1,52 @@
 (function () {
   const code = window.location.pathname.split('/').filter(Boolean).pop();
 
+  // ─── Page-visible diagnostics (works without DevTools) ───────────────────
+  // Query string ?debug=1 forces the panel to appear. Otherwise it only shows
+  // when placeMaskedCall would refuse due to SDK not loading.
+  const debugEnabled = /(?:^|[?&])debug=1(?:&|$)/.test(window.location.search);
+  const debugLines = [];
+  function debug(label, value) {
+    const line = `${new Date().toISOString().slice(11, 19)}  ${label}: ${value}`;
+    debugLines.push(line);
+    // Trim to last 40 lines
+    if (debugLines.length > 40) debugLines.shift();
+    renderDebugPanel();
+    // Also mirror to console for cases where DevTools IS available.
+    try { console.log('[scan-diag]', label, value); } catch (_) {}
+  }
+  function renderDebugPanel() {
+    let el = document.getElementById('debugPanel');
+    if (!el) {
+      el = document.createElement('pre');
+      el.id = 'debugPanel';
+      el.style.cssText =
+        'margin-top:20px;padding:12px;background:#111827;color:#93C5FD;border-radius:8px;font-size:11px;line-height:1.4;white-space:pre-wrap;word-break:break-all;max-height:280px;overflow:auto;';
+      document.body.appendChild(el);
+    }
+    el.textContent = debugLines.join('\n');
+  }
+
+  // Capture CSP + other browser errors so we can see them on-screen.
+  window.addEventListener('error', (e) => {
+    debug('window.error', `${e.message} @ ${e.filename}:${e.lineno}:${e.colno}`);
+  });
+  window.addEventListener('securitypolicyviolation', (e) => {
+    debug('CSP violation', `${e.violatedDirective} blocked ${e.blockedURI}`);
+  });
+
+  // First-run diagnostics — dump environment BEFORE anything else runs.
+  debug('userAgent', navigator.userAgent);
+  debug('protocol', window.location.protocol);
+  debug('window.Twilio', typeof window.Twilio);
+  if (window.Twilio) {
+    debug('Twilio.Device', typeof window.Twilio.Device);
+    debug('Twilio.version', window.Twilio.VERSION || 'unknown');
+  }
+  debug('mediaDevices', typeof navigator.mediaDevices);
+  debug('secureContext', String(window.isSecureContext));
+  if (debugEnabled) renderDebugPanel();
+
   const loadingEl = document.getElementById('loading');
   const contentEl = document.getElementById('content');
   const errorEl = document.getElementById('errorState');
@@ -121,9 +167,14 @@
 
   async function placeMaskedCall(targetType, contactId) {
     if (!window.Twilio || !window.Twilio.Device) {
-      setStatus('Masked calling is not supported in this browser. Please try Chrome, Safari, or Firefox.');
+      debug('SDK check failed', `window.Twilio=${typeof window.Twilio} Device=${window.Twilio && typeof window.Twilio.Device}`);
+      renderDebugPanel();
+      setStatus(
+        'Voice SDK did not load. See diagnostics below — if you see a CSP violation, the CSP header needs sdk.twilio.com. Otherwise try force-reloading the page.',
+      );
       return;
     }
+    debug('SDK check passed', `Device=${typeof window.Twilio.Device}`);
     if (activeCall) {
       // Prevent double-click while a call is already in progress.
       return;
@@ -133,13 +184,14 @@
     setStatus('Requesting microphone permission…');
 
     try {
-      // Trigger the browser's mic permission prompt up front. This also
-      // primes the audio context so the incoming call audio autoplays.
+      debug('mic', 'requesting getUserMedia({audio:true})');
       await navigator.mediaDevices.getUserMedia({ audio: true });
+      debug('mic', 'granted');
 
       setStatus('Alerting the owner…');
 
       const geo = await getGeolocation();
+      debug('initiate', `POST /api/calls/initiate qrId=${qrId} type=${targetType}`);
       const initiateRes = await fetch('/api/calls/initiate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -152,16 +204,20 @@
         }),
       });
 
+      debug('initiate response', `status=${initiateRes.status}`);
       const initiateBody = await initiateRes.json();
       if (!initiateRes.ok) {
+        debug('initiate body', JSON.stringify(initiateBody).slice(0, 200));
         throw new Error(initiateBody.message || 'Unable to place this call.');
       }
 
       const { voiceToken, callLogId } = initiateBody;
+      debug('token', `len=${(voiceToken || '').length} callLogId=${callLogId}`);
 
       setStatus('Connecting a secure line…');
       await connectVoice(voiceToken, callLogId);
     } catch (err) {
+      debug('placeMaskedCall threw', `${err.name || 'Error'}: ${err.message || err}`);
       setStatus(friendlyError(err));
       cleanupCall();
     }
@@ -181,6 +237,7 @@
     });
 
     device.on('error', (twilioError) => {
+      debug('device.error', `code=${twilioError.code} ${twilioError.message}`);
       setStatus(`Call error: ${twilioError.message || 'unknown'}`);
       cleanupCall();
     });
