@@ -33,12 +33,17 @@ COPY package*.json ./
 RUN npm ci --omit=dev --ignore-scripts && npm cache clean --force
 
 # Reuse the client generated in the build stage — same OS/libc, so the engine
-# binary is compatible.
+# binary is compatible. Also copy the `prisma` CLI package + its transitive
+# runtime deps so `prisma migrate deploy` can run on container start.
 COPY --from=build /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=build /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=build /app/node_modules/prisma ./node_modules/prisma
+COPY --from=build /app/node_modules/.bin/prisma ./node_modules/.bin/prisma
 COPY --from=build /app/prisma ./prisma
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/public ./public
 
 EXPOSE 4000
-CMD ["node", "dist/server.js"]
+# `npm start` runs `prisma migrate deploy && node dist/server.js` so pending
+# migrations are applied on every deploy before the app accepts traffic.
+CMD ["npm", "start"]
