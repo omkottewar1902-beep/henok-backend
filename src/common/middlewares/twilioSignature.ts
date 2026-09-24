@@ -21,6 +21,16 @@ export function verifyTwilioSignature(req: Request, res: Response, next: NextFun
     return;
   }
 
+  // Escape hatch for the case where Cloudflare/Render strips the
+  // X-Twilio-Signature header. Set TWILIO_SIGNATURE_VERIFY=false on Render.
+  // Safe here because this endpoint only returns TwiML; the caller cannot
+  // actually place a call without our Twilio credentials.
+  if (!env.twilioSignatureVerify) {
+    console.warn('[twilio-signature] verification DISABLED via TWILIO_SIGNATURE_VERIFY=false');
+    next();
+    return;
+  }
+
   // Check every plausible casing / proxy-prefixed variant Twilio's signature
   // header might arrive under after passing through Cloudflare and Render.
   const rawSig =

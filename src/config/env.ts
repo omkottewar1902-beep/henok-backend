@@ -56,4 +56,10 @@ export const env = {
   // requires this string in the X-Admin-Token header. Leave unset in prod
   // (route returns 404) except for one-off test seeding.
   adminSeedToken: process.env.ADMIN_SEED_TOKEN ?? '',
+
+  // Set to "false" (string) to bypass X-Twilio-Signature validation on
+  // /api/calls/voice-webhook and /api/calls/status-webhook. Only for
+  // debugging when a proxy (Cloudflare/Render) strips the header. Anything
+  // else (default) → verification enforced.
+  twilioSignatureVerify: (process.env.TWILIO_SIGNATURE_VERIFY ?? 'true').toLowerCase() !== 'false',
 };
