@@ -56,6 +56,28 @@ router.post('/voice-webhook', verifyTwilioSignature, callsController.voiceWebhoo
  */
 router.post('/status-webhook', verifyTwilioSignature, callsController.statusWebhook);
 
+/**
+ * @openapi
+ * /api/calls/incoming:
+ *   post:
+ *     tags: [Calls]
+ *     summary: Twilio inbound-voice webhook - answers when a scanner dials the shared Twilio number and opens a <Gather> to catch the extension DTMF
+ *     responses:
+ *       200: { description: TwiML XML with <Gather> }
+ */
+router.post('/incoming', verifyTwilioSignature, callsController.incomingCall);
+
+/**
+ * @openapi
+ * /api/calls/incoming/route:
+ *   post:
+ *     tags: [Calls]
+ *     summary: Twilio <Gather> action - receives DTMF digits, resolves extension → owner mobile, returns TwiML that bridges the call
+ *     responses:
+ *       200: { description: TwiML XML with <Dial> or <Hangup> }
+ */
+router.post('/incoming/route', verifyTwilioSignature, callsController.incomingRoute);
+
 export default router;
 
 /** Owner-facing Call History, mounted at /api/qr/:qrId/call-logs */

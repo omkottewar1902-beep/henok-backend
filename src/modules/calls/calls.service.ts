@@ -220,6 +220,98 @@ export async function resolveDialNumber(
   return targetMobile;
 }
 
+/**
+ * Twilio-proxy dial URL. Instead of exposing the owner's real phone number
+ * to the scanner's dialer, return a `tel:` URL to the shared Twilio number
+ * with the QR's 5-digit extension appended as DTMF (after a short pause
+ * so Twilio's <Gather> has time to answer and start listening).
+ *
+ * When the scanner dials this on their phone, Twilio picks up, receives the
+ * extension via DTMF, looks up the owner in the DB, and bridges the call —
+ * both parties only ever see the Twilio number.
+ */
+export async function buildProxyDialUrl(
+  qrId: string,
+  targetType: 'OWNER' | 'EMERGENCY',
+  contactId: string | undefined,
+  req: Request,
+): Promise<string> {
+  const qr = await prisma.qr.findUnique({
+    where: { id: qrId },
+    include: { emergencyContacts: true },
+  });
+  if (!qr || qr.status !== 'ACTIVE') {
+    throw new ApiError(404, 'This QR code is not active');
+  }
+
+  // Log the scan action + fire the SMS alert to emergency contacts NOW
+  // (before the scanner completes the call). This matches what /initiate
+  // did in the Voice-SDK flow.
+  await logScan(qr.id, req, targetType === 'OWNER' ? 'CALL_OWNER' : 'CALL_EMERGENCY').catch(() => {});
+
+  // Build the DTMF payload. Pattern: <extension>#<0=owner|1=emergency>[<contactIndex>]#
+  //   10005#0#     → route to owner of extension 10005
+  //   10005#1#     → route to first emergency contact of 10005
+  //   10005#1#2#   → route to 2nd (0-indexed) emergency contact of 10005
+  // The `#` terminates each Gather so the router webhook fires quickly.
+  const extension = qr.extensionNumber;
+  let dtmf = `${extension}#`;
+  if (targetType === 'EMERGENCY') {
+    const idx = contactId ? qr.emergencyContacts.findIndex((c) => c.id === contactId) : 0;
+    dtmf = `${extension}#1${idx >= 0 ? idx : 0}#`;
+  } else {
+    dtmf = `${extension}#0#`;
+  }
+
+  // `,,` = 4-second pause on iOS/Android before DTMF is sent — long enough for
+  // Twilio to answer and begin the first <Gather>.
+  const twilioNumber = env.twilioCallerIdNumber.replace(/[^\d+]/g, '');
+  return `tel:${twilioNumber},,${dtmf}`;
+}
+
+/**
+ * Called from the inbound-voice DTMF router webhook. Given the extension +
+ * routing digits sent by the scanner's phone, returns TwiML that bridges the
+ * call to the correct owner or emergency contact.
+ *
+ * Returns an object the controller can turn into TwiML, or throws if the
+ * extension isn't found (controller will hangup gracefully).
+ */
+export async function resolveExtensionRoute(
+  digits: string,
+): Promise<{ targetMobile: string; label: string } | null> {
+  // Router receives the full accumulated Digits string, minus trailing #s.
+  // Example inputs (after Twilio strips trailing #):
+  //   "10005"         → owner of ext 10005 (no route digit; default owner)
+  //   "10005#0"       → owner
+  //   "10005#1"       → first emergency contact
+  //   "10005#1#2"     → 3rd emergency contact
+  //
+  // We tolerate the # or no # for maximum device compatibility.
+  const clean = digits.replace(/\s+/g, '');
+  const parts = clean.split('#').filter(Boolean);
+  const extension = parts[0];
+  const routeDigit = parts[1] ?? '0';
+  const contactIndexStr = parts[2] ?? '0';
+
+  if (!/^\d{5}$/.test(extension)) return null;
+
+  const qr = await prisma.qr.findUnique({
+    where: { extensionNumber: extension },
+    include: { emergencyContacts: true, vehicle: true, dog: true, luggage: true, otherItem: true },
+  });
+  if (!qr || qr.status !== 'ACTIVE') return null;
+
+  if (routeDigit === '1') {
+    const idx = parseInt(contactIndexStr, 10);
+    const contact = qr.emergencyContacts[isNaN(idx) ? 0 : idx];
+    if (!contact) return null;
+    return { targetMobile: contact.mobile, label: `${contact.name} (${contact.relationship})` };
+  }
+  // Default: OWNER
+  return { targetMobile: qr.ownerMobile, label: qr.ownerName };
+}
+
 /** Owner-facing Call History tab, newest first. */
 export async function listCallLogsForOwner(userId: string, qrId: string) {
   await assertQrOwnership(userId, qrId);
