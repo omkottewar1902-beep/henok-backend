@@ -1,10 +1,30 @@
 import { Router } from 'express';
 import * as authController from './auth.controller';
-import { checkMobileSchema, loginSchema, registerSchema } from './auth.validation';
+import { checkMobileSchema, loginSchema, registerSchema, sendOtpSchema } from './auth.validation';
 import { validateBody } from '../../common/middlewares/validate';
 import { authLimiter } from '../../common/middlewares/rateLimiter';
 
 const router = Router();
+
+/**
+ * @openapi
+ * /api/auth/send-otp:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Trigger delivery of an OTP for the given mobile (dev-mode no-op; use "1234")
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [mobile]
+ *             properties:
+ *               mobile: { type: string }
+ *     responses:
+ *       200: { description: '{ sent: true, dev: true }' }
+ */
+router.post('/send-otp', authLimiter, validateBody(sendOtpSchema), authController.sendOtp);
 
 /**
  * @openapi
