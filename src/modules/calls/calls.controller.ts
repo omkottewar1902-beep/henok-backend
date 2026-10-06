@@ -116,7 +116,8 @@ export async function incomingCall(req: Request, res: Response, next: NextFuncti
 export async function incomingRoute(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const digits = (req.body?.Digits as string) ?? '';
-    console.log(`[twilio-incoming-route] Digits="${digits}"  CallSid=${req.body?.CallSid ?? 'none'}`);
+    const callSid = (req.body?.CallSid as string) ?? '';
+    console.log(`[twilio-incoming-route] Digits="${digits}"  CallSid=${callSid || 'none'}`);
     const resolved = await callsService.resolveExtensionRoute(digits);
     if (!resolved) {
       const errXml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -127,16 +128,51 @@ export async function incomingRoute(req: Request, res: Response, next: NextFunct
       res.type('text/xml').send(errXml);
       return;
     }
+
+    // Tag the Twilio inbound CallSid onto the pending call_log row (created
+    // when the scanner tapped Call). The <Dial action> status callback below
+    // can then match by CallSid and fill in duration + final status.
+    if (callSid) {
+      await callsService
+        .attachCallSidToPendingLog(resolved.qrId, resolved.callerType, callSid)
+        .catch((err) => console.warn('[twilio-incoming-route] attach-sid failed:', err));
+    }
+
     const callerId = (await import('../../config/env')).env.twilioCallerIdNumber;
     const twiml = `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Say voice="alice">Connecting you now.</Say>
-  <Dial callerId="${callerId}" answerOnBridge="true" timeout="30">
+  <Dial callerId="${callerId}" answerOnBridge="true" timeout="30" action="/api/calls/incoming-status" method="POST">
     <Number>${resolved.targetMobile}</Number>
   </Dial>
 </Response>`;
     console.log(`[twilio-incoming-route] bridging to ${resolved.label}`);
     res.type('text/xml').send(twiml);
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * Status callback for the inbound `<Dial>` leg. Twilio POSTs here when the
+ * bridged outbound call ends with `DialCallStatus` (completed, no-answer,
+ * busy, failed, canceled) and `DialCallDuration` (seconds). We update the
+ * `CallLog` row previously tagged with this CallSid so Call History shows
+ * final status + duration instead of staying on "Initiated · —".
+ */
+export async function incomingStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const callSid = (req.body?.CallSid as string) ?? '';
+    const dialCallStatus = req.body?.DialCallStatus as string | undefined;
+    const dialCallDuration = req.body?.DialCallDuration as string | undefined;
+    console.log(
+      `[twilio-incoming-status] CallSid=${callSid}  DialCallStatus=${dialCallStatus ?? 'none'}  DialCallDuration=${dialCallDuration ?? 'none'}`,
+    );
+    if (callSid) {
+      await callsService.recordInboundDialOutcome(callSid, dialCallStatus, dialCallDuration);
+    }
+    // Twilio expects a 200 TwiML response (even empty) so the call tears down cleanly.
+    res.type('text/xml').send('<Response></Response>');
   } catch (err) {
     next(err);
   }

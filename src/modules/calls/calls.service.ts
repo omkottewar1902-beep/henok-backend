@@ -254,11 +254,18 @@ export async function buildProxyDialUrl(
   //   10005#1#     → route to first emergency contact of 10005
   //   10005#1#2#   → route to 2nd (0-indexed) emergency contact of 10005
   // The `#` terminates each Gather so the router webhook fires quickly.
+  // DTMF payload parsed by `resolveExtensionRoute` after `#`-split:
+  //   OWNER      → 10005#0#          parts = ["10005","0"]
+  //   EMERGENCY  → 10005#1#<idx>#    parts = ["10005","1","<idx>"]
+  // The extra `#` between the route digit and the contact index matters —
+  // without it, "1" + idx collapses into "10", "11", etc. and the parser
+  // reads routeDigit="10" (unknown) and falls through to OWNER.
   const extension = qr.extensionNumber;
-  let dtmf = `${extension}#`;
+  let dtmf: string;
   if (targetType === 'EMERGENCY') {
     const idx = contactId ? qr.emergencyContacts.findIndex((c) => c.id === contactId) : 0;
-    dtmf = `${extension}#1${idx >= 0 ? idx : 0}#`;
+    const safeIdx = idx >= 0 ? idx : 0;
+    dtmf = `${extension}#1#${safeIdx}#`;
   } else {
     dtmf = `${extension}#0#`;
   }
@@ -279,7 +286,7 @@ export async function buildProxyDialUrl(
  */
 export async function resolveExtensionRoute(
   digits: string,
-): Promise<{ targetMobile: string; label: string } | null> {
+): Promise<{ targetMobile: string; label: string; qrId: string; callerType: 'OWNER' | 'EMERGENCY' } | null> {
   // Router receives the full accumulated Digits string, minus trailing #s.
   // Example inputs (after Twilio strips trailing #):
   //   "10005"         → owner of ext 10005 (no route digit; default owner)
@@ -306,15 +313,96 @@ export async function resolveExtensionRoute(
     const idx = parseInt(contactIndexStr, 10);
     const contact = qr.emergencyContacts[isNaN(idx) ? 0 : idx];
     if (!contact) return null;
-    return { targetMobile: contact.mobile, label: `${contact.name} (${contact.relationship})` };
+    return {
+      targetMobile: contact.mobile,
+      label: `${contact.name} (${contact.relationship})`,
+      qrId: qr.id,
+      callerType: 'EMERGENCY',
+    };
   }
   // Default: OWNER
-  return { targetMobile: qr.ownerMobile, label: qr.ownerName };
+  return {
+    targetMobile: qr.ownerMobile,
+    label: qr.ownerName,
+    qrId: qr.id,
+    callerType: 'OWNER',
+  };
 }
 
-/** Owner-facing Call History tab, newest first. */
+/**
+ * Called from the `incomingRoute` webhook once the extension DTMF has been
+ * parsed. Finds the most recent INITIATED call log for this QR + callerType
+ * (created when the scanner tapped Call) and tags the Twilio inbound CallSid
+ * onto it, so the subsequent status callback can match + update status/duration.
+ */
+export async function attachCallSidToPendingLog(
+  qrId: string,
+  callerType: 'OWNER' | 'EMERGENCY',
+  callSid: string,
+): Promise<void> {
+  // Only consider logs created in the last 10 min — tolerates slow DTMF but
+  // avoids matching a stale pending log from an abandoned test session.
+  const since = new Date(Date.now() - 10 * 60 * 1000);
+  const log = await prisma.callLog.findFirst({
+    where: {
+      qrId,
+      callerType,
+      status: 'INITIATED',
+      twilioCallSid: null,
+      createdAt: { gte: since },
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+  if (log) {
+    await prisma.callLog.update({
+      where: { id: log.id },
+      data: { twilioCallSid: callSid },
+    });
+  }
+}
+
+/**
+ * Called from the `<Dial action>` status callback once the bridged call ends.
+ * Updates the log row (identified by the parent CallSid) with the final
+ * status + duration so Call History shows "Answered · 2m 15s" instead of
+ * staying stuck on "Initiated · —".
+ */
+export async function recordInboundDialOutcome(
+  callSid: string,
+  dialCallStatus: string | undefined,
+  dialCallDuration: string | undefined,
+): Promise<void> {
+  const status = (dialCallStatus ? DIAL_STATUS_MAP[dialCallStatus] : undefined) ?? 'FAILED';
+  const durationSec = dialCallDuration ? parseInt(dialCallDuration, 10) : undefined;
+  await prisma.callLog.updateMany({
+    where: { twilioCallSid: callSid },
+    data: {
+      status,
+      durationSec: Number.isFinite(durationSec) ? durationSec : undefined,
+    },
+  });
+}
+
+/** Owner-facing Call History tab, newest first. Enriches each row with the
+ * resolved target name so the UI can show "Called Michael Thompson" rather
+ * than just "Owner" / "Emergency Contact".
+ */
 export async function listCallLogsForOwner(userId: string, qrId: string) {
-  await assertQrOwnership(userId, qrId);
-  const logs = await prisma.callLog.findMany({ where: { qrId }, orderBy: { createdAt: 'desc' } });
-  return logs.map((log) => ({ ...log, targetMobile: undefined, blockIdentifier: log.callerRef }));
+  const qr = await assertQrOwnership(userId, qrId);
+  const [logs, contacts] = await Promise.all([
+    prisma.callLog.findMany({ where: { qrId }, orderBy: { createdAt: 'desc' } }),
+    prisma.emergencyContact.findMany({ where: { qrId }, orderBy: { createdAt: 'asc' } }),
+  ]);
+  return logs.map((log) => {
+    const targetName =
+      log.callerType === 'OWNER'
+        ? qr.ownerName
+        : contacts.find((c) => c.mobile === log.targetMobile)?.name ?? 'Emergency contact';
+    return {
+      ...log,
+      targetMobile: undefined,
+      blockIdentifier: log.callerRef,
+      targetName,
+    };
+  });
 }

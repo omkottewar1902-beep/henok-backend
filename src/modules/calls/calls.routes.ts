@@ -78,6 +78,17 @@ router.post('/incoming', verifyTwilioSignature, callsController.incomingCall);
  */
 router.post('/incoming/route', verifyTwilioSignature, callsController.incomingRoute);
 
+/**
+ * @openapi
+ * /api/calls/incoming-status:
+ *   post:
+ *     tags: [Calls]
+ *     summary: Twilio `<Dial action>` callback - fires when the bridged leg ends, lets us record duration + final status against the CallLog
+ *     responses:
+ *       200: { description: Empty TwiML acknowledgement }
+ */
+router.post('/incoming-status', verifyTwilioSignature, callsController.incomingStatus);
+
 export default router;
 
 /** Owner-facing Call History, mounted at /api/qr/:qrId/call-logs */
