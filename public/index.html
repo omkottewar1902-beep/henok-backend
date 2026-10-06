@@ -1,169 +1,1141 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Jcscan2connect &mdash; QR stickers that put finders in touch with owners</title>
-  <meta name="description" content="Jcscan2connect turns a scan of your QR sticker into a masked call to the owner or a registered contact — for cars, pets, luggage, and valuables. No phone numbers exposed." />
-  <link rel="canonical" href="https://henok-backend-r5am.onrender.com/" />
-  <style>
-    :root { color-scheme: light; --blue:#1D4ED8; --blue-light:#3B82F6; --gold:#FACC15; --ink:#0F1724; --muted:#6B7280; --cream:#FDFBF6; --border:#E5E7EB; }
-    * { box-sizing: border-box; }
-    body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif; color:var(--ink); background:#fff; line-height:1.6; }
-    a { color: var(--blue); }
-    header.nav { position:sticky; top:0; z-index:10; background:rgba(255,255,255,0.9); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); }
-    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
-    header.nav .row { display:flex; align-items:center; justify-content:space-between; padding:14px 0; }
-    .brand { font-weight:800; font-size:17px; letter-spacing:-0.2px; }
-    .brand span { color: var(--blue); }
-    nav.links a { margin-left:20px; text-decoration:none; color:var(--ink); font-weight:500; font-size:14px; }
-    nav.links a:hover { color: var(--blue); }
-    .hero { padding: 72px 0 56px; background: linear-gradient(180deg, #F8FAFF 0%, #fff 100%); }
-    .hero h1 { font-size:44px; line-height:1.1; letter-spacing:-1px; margin:0 0 16px; font-weight:800; }
-    .hero .lead { font-size:18px; color:var(--muted); max-width:640px; margin:0 0 28px; }
-    .cta-row { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
-    .waitlist { display:flex; gap:8px; max-width:480px; margin-top:8px; }
-    .waitlist input[type=email] { flex:1; padding:12px 14px; font-size:15px; border:1.5px solid var(--border); border-radius:12px; font-family:inherit; }
-    .waitlist input[type=email]:focus { outline:none; border-color:var(--blue); box-shadow: 0 0 0 3px rgba(29,78,216,0.12); }
-    .btn { display:inline-block; padding:12px 22px; border-radius:12px; font-weight:700; font-size:15px; text-decoration:none; border:none; cursor:pointer; font-family:inherit; }
-    .btn-primary { background: var(--blue); color:#fff; }
-    .btn-primary:hover { background: var(--blue-light); }
-    .btn-ghost { background: #fff; color: var(--blue); border:1.5px solid var(--border); }
-    .btn-ghost:hover { border-color: var(--blue); }
-    section { padding: 56px 0; border-top: 1px solid var(--border); }
-    section h2 { font-size:28px; margin:0 0 8px; letter-spacing:-0.4px; }
-    section p.sub { color: var(--muted); font-size:15px; margin:0 0 32px; max-width:680px; }
-    .grid3 { display:grid; grid-template-columns: repeat(3, 1fr); gap:20px; }
-    .card { border:1px solid var(--border); border-radius:16px; padding:22px; background:#fff; }
-    .card h3 { margin:0 0 6px; font-size:17px; }
-    .card p { margin:0; color:var(--muted); font-size:14px; }
-    .num { display:inline-block; background:var(--gold); color:var(--ink); font-weight:800; width:28px; height:28px; border-radius:50%; text-align:center; line-height:28px; font-size:14px; margin-bottom:10px; }
-    .grid2 { display:grid; grid-template-columns: 1.2fr 1fr; gap:32px; align-items:center; }
-    .stripe { background: var(--cream); border-radius:20px; padding: 36px 32px; }
-    .callout { background:#FFF7ED; border:1px solid #FED7AA; border-radius:16px; padding:22px 26px; color:#7C2D12; }
-    .callout h3 { margin:0 0 6px; color:#9A3412; font-size:17px; }
-    .callout p { margin:0; font-size:14px; }
-    footer { padding: 40px 0 64px; border-top:1px solid var(--border); background:#fafafa; color:var(--muted); font-size:13px; }
-    footer .row { display:flex; justify-content:space-between; flex-wrap:wrap; gap:16px; }
-    footer a { color: var(--blue); text-decoration:none; margin-right:14px; }
-    @media (max-width: 720px) {
-      .hero h1 { font-size:32px; }
-      .grid3, .grid2 { grid-template-columns: 1fr; }
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JCSafeScan — Peace of mind in an emergency, without giving up your privacy</title>
+<meta name="description" content="A small QR sticker for your car, pet, luggage and valuables. Whoever finds them can reach you and your emergency contacts in one tap — without ever seeing your phone number." />
+<meta name="theme-color" content="#060A14" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="JCSafeScan — reachable in an emergency, private the rest of the time" />
+<meta property="og:description" content="Stick a QR on the things you'd hate to lose. One tap connects a finder to you. Your number never appears on their screen." />
+<meta property="og:url" content="https://jcsafescan.com/" />
+<meta property="og:image" content="https://jcsafescan.com/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="JCSafeScan — reachable in an emergency, private the rest of the time" />
+<meta name="twitter:description" content="One QR. One tap. Your number stays yours." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Product","name":"JCSafeScan Emergency QR","brand":{"@type":"Brand","name":"JCSafeScan"},"description":"An emergency QR sticker that lets a finder or first responder reach the owner and their registered contacts without seeing a phone number.","offers":{"@type":"AggregateOffer","priceCurrency":"USD","lowPrice":"5.00","highPrice":"40.00","offerCount":"3"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Is my phone number visible to the person scanning?","acceptedAnswer":{"@type":"Answer","text":"No. The scan page shows a Call Owner button, not a number. Tapping it opens the finder's dialer on a routed line, so your real number never reaches the browser or their call log."}},
+{"@type":"Question","name":"What if I lose my phone?","acceptedAnswer":{"@type":"Answer","text":"Your QR keeps working. Calls fall through to the emergency contacts you registered, in the order you chose."}},
+{"@type":"Question","name":"Does it work internationally?","acceptedAnswer":{"@type":"Answer","text":"Yes. Any phone camera in any country opens the scan page, and call routing works across borders."}},
+{"@type":"Question","name":"What if the sticker is damaged?","acceptedAnswer":{"@type":"Answer","text":"Download the printable PDF from the app and print a replacement. The same QR keeps the same contacts and history."}},
+{"@type":"Question","name":"Can I disable a QR?","acceptedAnswer":{"@type":"Answer","text":"Yes, instantly, from the app. A disabled QR shows a neutral page and reaches no one until you switch it back on."}},
+{"@type":"Question","name":"How do you handle spam callers?","acceptedAnswer":{"@type":"Answer","text":"Block any number from the scan history in one tap. Blocked callers can scan, but the call never connects."}},
+{"@type":"Question","name":"How does payment work?","acceptedAnswer":{"@type":"Answer","text":"One payment for the sticker, in the app or on this site. Nothing recurring."}},
+{"@type":"Question","name":"Is there a subscription?","acceptedAnswer":{"@type":"Answer","text":"No. The app, call routing and scan history are included for the life of the QR."}}]}
+</script>
+
+<style>
+/* ─────────────────────────── tokens ─────────────────────────── */
+:root{
+  --bg:#060A14;
+  --surface:#0D1117;
+  --card-a:#122040;
+  --card-b:#0A1525;
+  --line:#2A4070;
+
+  --blue:#3B82F6;
+  --blue-dark:#1D4ED8;
+  --blue-light:#60A5FA;
+  --gold:#FACC15;
+
+  --success:#10B981;
+  --warning:#F59E0B;
+  --danger:#EF4444;
+
+  --t1:#F8FAFC;
+  --t2:#94A3B8;
+  --t3:#475569;
+
+  --r-sm:12px; --r-md:16px; --r-lg:20px; --r-xl:24px;
+
+  --sans:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  --mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+
+  --wrap:1216px;
+  --pad:24px;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--t1);
+  font-family:var(--sans);font-weight:500;font-size:16px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+img,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--blue-light);outline-offset:3px;border-radius:6px}
+
+/* ambient corner glows */
+.aura{position:fixed;inset:0;pointer-events:none;z-index:0}
+.aura::before,.aura::after{content:'';position:absolute;width:820px;height:820px;border-radius:50%;filter:blur(30px)}
+.aura::before{top:-380px;left:-260px;background:radial-gradient(circle,rgba(59,130,246,.16),transparent 62%)}
+.aura::after{bottom:-460px;right:-300px;background:radial-gradient(circle,rgba(29,78,216,.14),transparent 62%)}
+
+.skip{position:absolute;left:-9999px;top:12px;z-index:200;padding:10px 16px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm)}
+.skip:focus{left:16px}
+
+/* ─────────────────────────── layout ─────────────────────────── */
+.wrap{width:100%;max-width:var(--wrap);margin-inline:auto;padding-inline:var(--pad);position:relative;z-index:1}
+.section{padding-block:clamp(72px,9vw,120px);position:relative;z-index:1}
+.section--flush{padding-block:0}
+
+.hairline{height:1px;width:100%;background:linear-gradient(90deg,transparent,rgba(250,204,21,.55),transparent);border:0;margin:0}
+.hairline--dim{background:linear-gradient(90deg,transparent,rgba(250,204,21,.28),transparent)}
+.rule{height:1px;background:linear-gradient(90deg,transparent,rgba(42,64,112,.9),transparent);border:0}
+
+/* ─────────────────────────── type ─────────────────────────── */
+.eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin:0 0 18px;
+}
+.eyebrow::before{content:'';width:22px;height:1px;background:var(--gold);opacity:.8}
+
+h1,h2,h3,h4{margin:0;font-weight:800;letter-spacing:-.03em;line-height:1.08}
+h1{font-size:clamp(2.5rem,5.6vw,4.25rem);letter-spacing:-.04em;line-height:1.02}
+h2{font-size:clamp(1.95rem,3.4vw,2.9rem)}
+h3{font-size:1.125rem;letter-spacing:-.02em}
+p{margin:0}
+.lead{color:var(--t2);font-size:clamp(1.02rem,1.25vw,1.15rem);max-width:52ch}
+.muted{color:var(--t2)}
+.dim{color:var(--t3)}
+.grad{background:linear-gradient(96deg,var(--blue-light),var(--blue) 55%,#8FB8FF);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+.head{max-width:640px;margin-bottom:52px}
+.head--center{margin-inline:auto;text-align:center}
+.head h2{margin-bottom:16px}
+
+/* ─────────────────────────── glass card ─────────────────────────── */
+.glass{
+  position:relative;border-radius:var(--r-lg);
+  background:linear-gradient(158deg,var(--card-a),var(--card-b) 78%);
+  border:1px solid var(--line);
+  box-shadow:0 18px 40px -24px rgba(0,0,0,.9),inset 0 1px 0 rgba(255,255,255,.05);
+  transition:border-color .35s ease,box-shadow .35s ease,transform .35s cubic-bezier(.2,.8,.3,1);
+}
+.glass:hover{border-color:#38538C;box-shadow:0 26px 60px -28px rgba(0,0,0,.95),inset 0 1px 0 rgba(255,255,255,.08)}
+.tilt{transform-style:preserve-3d;will-change:transform}
+
+/* ─────────────────────────── buttons ─────────────────────────── */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  padding:14px 26px;border-radius:var(--r-sm);
+  font-weight:700;font-size:.95rem;letter-spacing:-.01em;white-space:nowrap;
+  transition:box-shadow .35s ease,transform .25s ease,background .3s ease,border-color .3s ease;
+}
+.btn--primary{
+  background:linear-gradient(135deg,var(--blue),var(--blue-dark));
+  color:#fff;box-shadow:0 0 0 rgba(59,130,246,0),0 10px 24px -14px rgba(29,78,216,.9);
+}
+.btn--primary:hover{box-shadow:0 0 32px rgba(59,130,246,.4),0 12px 28px -14px rgba(29,78,216,.9);transform:translateY(-1px)}
+.btn--ghost{border:1px solid var(--line);color:var(--t1);background:rgba(13,17,23,.5)}
+.btn--ghost:hover{border-color:#3C598F;background:rgba(18,32,64,.7)}
+.btn--gold{background:var(--gold);color:#171203;font-weight:800}
+.btn--gold:hover{box-shadow:0 0 30px rgba(250,204,21,.35);transform:translateY(-1px)}
+.btn--wide{width:100%}
+.btn svg{width:16px;height:16px;flex:none}
+
+/* ─────────────────────────── nav ─────────────────────────── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  border-bottom:1px solid transparent;background:transparent;
+  transition:background .35s ease,border-color .35s ease,backdrop-filter .35s ease;
+}
+.nav.is-stuck{background:rgba(6,10,20,.8);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom-color:rgba(42,64,112,.65)}
+.nav__in{display:flex;align-items:center;gap:32px;height:72px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.02em;font-size:1.02rem}
+.brand__mark{width:30px;height:30px;flex:none}
+.nav__links{display:flex;gap:28px;margin-left:auto;font-size:.9rem;font-weight:600;color:var(--t2)}
+.nav__links a{transition:color .25s ease}
+.nav__links a:hover{color:var(--t1)}
+.nav__cta{display:flex;align-items:center;gap:14px}
+.nav__cta .btn{padding:10px 18px;font-size:.875rem}
+.nav__burger{display:none;margin-left:auto;padding:8px;border:1px solid var(--line);border-radius:10px}
+
+/* ─────────────────────────── hero ─────────────────────────── */
+.hero{padding-top:clamp(120px,15vw,168px);padding-bottom:clamp(64px,8vw,104px);position:relative;overflow:hidden}
+.hero::before{
+  content:'';position:absolute;top:-140px;right:-120px;width:820px;height:820px;
+  background:radial-gradient(circle,rgba(59,130,246,.2),transparent 60%);filter:blur(20px);pointer-events:none;
+}
+.hero__grid{display:grid;grid-template-columns:1.05fr .95fr;gap:64px;align-items:center}
+.hero h1{margin-bottom:22px}
+.hero .lead{margin-bottom:34px}
+.hero__cta{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:26px}
+.hero__note{display:flex;align-items:center;gap:9px;font-size:.85rem;color:var(--t3);font-weight:600}
+.hero__note .dot{width:6px;height:6px;border-radius:50%;background:var(--success);box-shadow:0 0 10px var(--success)}
+
+.stage{position:relative;display:flex;justify-content:center;align-items:center;min-height:560px;perspective:1400px}
+.stage__back{position:absolute;inset:auto;width:300px;height:400px;border-radius:var(--r-lg);border:1px solid rgba(42,64,112,.7);background:linear-gradient(158deg,rgba(18,32,64,.55),rgba(10,21,37,.55))}
+.stage__back--1{transform:translate(28px,26px) rotate(6deg)}
+.stage__back--2{transform:translate(14px,14px) rotate(3deg);border-color:rgba(42,64,112,.9)}
+
+/* finder call chip */
+.callchip{
+  position:absolute;left:-6px;bottom:24px;width:236px;padding:16px;border-radius:var(--r-md);z-index:5;
+  background:linear-gradient(158deg,rgba(18,32,64,.94),rgba(10,21,37,.96));
+  border:1px solid var(--line);backdrop-filter:blur(10px);
+  box-shadow:0 24px 50px -20px rgba(0,0,0,.95);
+}
+.callchip__top{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--t3);margin-bottom:12px}
+.callchip__num{font-family:var(--mono);font-size:1.02rem;font-weight:600;color:var(--t1);letter-spacing:.04em;margin-bottom:4px}
+.callchip__cap{font-size:.72rem;color:var(--t3);font-weight:600;margin-bottom:13px}
+.callchip__btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;border-radius:10px;background:linear-gradient(135deg,var(--blue),var(--blue-dark));font-size:.82rem;font-weight:700}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--success)}
+.pulse::after{content:'';display:block;width:7px;height:7px;border-radius:50%;background:var(--success);animation:ping 2.4s cubic-bezier(0,0,.2,1) infinite}
+@keyframes ping{0%{transform:scale(1);opacity:.7}70%,100%{transform:scale(3.4);opacity:0}}
+
+/* ─────────────────────────── sticker mockup ─────────────────────────── */
+.sticker{
+  position:relative;width:300px;flex:none;z-index:4;
+  border-radius:var(--r-lg);overflow:hidden;
+  background:var(--card-b);
+  border:1px solid var(--line);
+  box-shadow:0 40px 80px -30px rgba(0,0,0,.95),0 0 60px -20px rgba(59,130,246,.35);
+}
+.sticker--lg{width:340px}
+.sticker__band{padding:13px 16px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(120deg,var(--blue-dark),var(--blue))}
+.sticker__brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:.92rem;letter-spacing:-.02em;color:#fff}
+.sticker__brand svg{width:18px;height:18px}
+.sticker__kicker{font-size:9px;font-weight:800;letter-spacing:.18em;color:rgba(255,255,255,.86)}
+.sticker__body{background:#fff;padding:22px 20px 18px;text-align:center}
+.qrframe{position:relative;width:172px;margin:0 auto 16px;padding:10px}
+.sticker--lg .qrframe{width:196px}
+.qrframe svg{width:100%;height:auto}
+.br{position:absolute;width:20px;height:20px;border:2.5px solid var(--gold);border-radius:3px}
+.br--tl{top:0;left:0;border-right:0;border-bottom:0}
+.br--tr{top:0;right:0;border-left:0;border-bottom:0}
+.br--bl{bottom:0;left:0;border-right:0;border-top:0}
+.br--br{bottom:0;right:0;border-left:0;border-top:0}
+.scanline{position:absolute;left:10px;right:10px;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);box-shadow:0 0 12px rgba(250,204,21,.9);animation:sweep 4.2s cubic-bezier(.5,0,.5,1) infinite}
+@keyframes sweep{0%,100%{top:12px;opacity:0}10%{opacity:1}50%{top:calc(100% - 14px);opacity:1}60%{opacity:0}}
+.sticker__cta{font-size:.78rem;font-weight:800;letter-spacing:.13em;color:#0A1525;margin-bottom:14px}
+.ext{display:flex;align-items:center;justify-content:center;gap:12px}
+.ext svg{width:18px;height:18px}
+.ext__pill{font-family:var(--mono);font-size:1.02rem;font-weight:700;letter-spacing:.1em;color:#171203;background:var(--gold);padding:5px 18px;border-radius:999px;box-shadow:0 2px 0 rgba(0,0,0,.12)}
+.sticker__tags{display:flex;align-items:center;justify-content:center;gap:10px;padding:11px 12px;background:linear-gradient(120deg,var(--blue-dark),var(--blue));font-size:9.5px;font-weight:800;letter-spacing:.15em;color:#fff}
+.sticker__tags i{width:3px;height:3px;border-radius:50%;background:var(--gold);flex:none}
+.sticker__foot{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 14px;background:#0A1525;font-size:9px;font-weight:600;color:#7D93BC;letter-spacing:.02em}
+.sticker__foot span{display:flex;align-items:center;gap:5px}
+.sticker__foot svg{width:11px;height:11px;flex:none;color:var(--gold)}
+.shimmer{position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,transparent 38%,rgba(250,204,21,.22) 48%,rgba(255,255,255,.28) 52%,transparent 62%);transform:translateX(-120%);transition:transform 0s}
+.sticker:hover .shimmer{transform:translateX(120%);transition:transform 1.05s ease-out}
+
+/* ─────────────────────────── trust bar ─────────────────────────── */
+.trust{background:rgba(13,17,23,.6);border-block:1px solid rgba(42,64,112,.55)}
+.trust__in{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:14px 30px;padding:20px 0;font-size:.83rem;font-weight:700;letter-spacing:.06em;color:var(--t2);text-transform:uppercase}
+.trust__in i{width:4px;height:4px;border-radius:50%;background:var(--gold);flex:none}
+
+/* ─────────────────────────── steps ─────────────────────────── */
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.step{padding:32px 28px 30px}
+.steppill{
+  display:inline-flex;align-items:center;gap:10px;margin-bottom:22px;
+  padding:6px 14px 6px 8px;border-radius:999px;
+  border:1px solid rgba(250,204,21,.32);background:rgba(250,204,21,.07);
+}
+.steppill__n{
+  width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  background:var(--gold);color:#171203;font-family:var(--mono);font-size:.78rem;font-weight:700;
+}
+.steppill__l{font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+.step h3{margin-bottom:10px}
+.step p{color:var(--t2);font-size:.94rem}
+.step__ico{width:34px;height:34px;color:var(--blue-light);margin-bottom:20px}
+
+/* ─────────────────────────── use cases ─────────────────────────── */
+.tabs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px}
+.tab{
+  display:inline-flex;align-items:center;gap:10px;padding:11px 20px;border-radius:999px;
+  border:1px solid var(--line);background:rgba(13,17,23,.6);
+  font-size:.9rem;font-weight:700;color:var(--t2);
+  transition:all .3s ease;
+}
+.tab svg{width:17px;height:17px}
+.tab:hover{color:var(--t1);border-color:#3C598F}
+.tab[aria-selected="true"]{color:#fff;border-color:rgba(59,130,246,.7);background:linear-gradient(135deg,rgba(59,130,246,.24),rgba(29,78,216,.16));box-shadow:0 0 26px -8px rgba(59,130,246,.6)}
+.usecase{display:grid;grid-template-columns:1fr 1fr;gap:0;overflow:hidden;padding:0}
+.usecase[hidden]{display:none}
+.usecase__art{position:relative;min-height:330px;background:linear-gradient(150deg,#132850,#0A1525);border-right:1px solid var(--line);display:grid;place-items:center;padding:32px}
+.usecase__art svg{width:100%;max-width:330px;height:auto}
+.usecase__txt{padding:clamp(28px,3.4vw,44px);display:flex;flex-direction:column;justify-content:center;gap:16px}
+.usecase__txt h3{font-size:1.55rem;letter-spacing:-.03em}
+.usecase__txt p{color:var(--t2)}
+.link{display:inline-flex;align-items:center;gap:8px;color:var(--blue-light);font-weight:700;font-size:.9rem;width:fit-content;transition:gap .25s ease,color .25s ease}
+.link:hover{gap:13px;color:#93C0FF}
+.link svg{width:14px;height:14px}
+
+/* ─────────────────────────── features ─────────────────────────── */
+.grid-3-feat{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.feat{padding:28px 26px}
+.feat__ico{width:42px;height:42px;border-radius:var(--r-sm);display:grid;place-items:center;margin-bottom:20px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.28);color:var(--blue-light)}
+.feat__ico svg{width:20px;height:20px}
+.feat h3{margin-bottom:9px;font-size:1.02rem}
+.feat p{color:var(--t2);font-size:.92rem;line-height:1.6}
+
+/* ─────────────────────────── showcase ─────────────────────────── */
+.showcase{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.showcase__col{display:flex;flex-direction:column;align-items:center;gap:20px}
+.caption{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--t3);text-align:center}
+
+.phone{
+  width:290px;flex:none;border-radius:38px;padding:9px;
+  background:var(--surface);border:1px solid var(--line);
+  box-shadow:0 40px 80px -30px rgba(0,0,0,.95),inset 0 1px 0 rgba(255,255,255,.06);
+}
+.phone__screen{border-radius:30px;background:var(--bg);overflow:hidden;padding:14px 14px 20px;position:relative}
+.phone__notch{width:96px;height:22px;border-radius:999px;background:var(--surface);margin:0 auto 12px;border:1px solid rgba(42,64,112,.6)}
+.phone__bar{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.phone__bar svg{width:16px;height:16px;color:var(--t2)}
+.phone__bar h4{font-size:.92rem;font-weight:700}
+.chip{margin-left:auto;font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:999px;color:var(--success);background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.32)}
+.mini{border-radius:var(--r-md);overflow:hidden;border:1px solid var(--line);margin-bottom:14px}
+.mini__band{padding:8px 12px;background:linear-gradient(120deg,var(--blue-dark),var(--blue));font-size:9px;font-weight:800;letter-spacing:.14em;color:#fff;display:flex;justify-content:space-between}
+.mini__body{background:#fff;padding:14px;display:grid;place-items:center}
+.mini__body svg{width:92px;height:92px}
+.row{display:flex;align-items:center;justify-content:space-between;padding:11px 12px;border-radius:var(--r-sm);background:rgba(18,32,64,.5);border:1px solid rgba(42,64,112,.7);margin-bottom:8px;font-size:.8rem}
+.row span:first-child{color:var(--t3);font-weight:600}
+.row span:last-child{font-weight:700}
+.contact{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r-sm);background:rgba(18,32,64,.5);border:1px solid rgba(42,64,112,.7);margin-bottom:8px}
+.contact__av{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:.68rem;font-weight:800;background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;flex:none}
+.contact__n{font-size:.8rem;font-weight:700}
+.contact__r{font-size:.66rem;color:var(--t3);font-weight:600}
+.contact__ord{margin-left:auto;font-family:var(--mono);font-size:.66rem;color:var(--gold)}
+.phone__actions{display:flex;gap:8px;margin-top:12px}
+.phone__actions button{flex:1;padding:9px;border-radius:10px;font-size:.74rem;font-weight:700;border:1px solid var(--line);color:var(--t2)}
+.phone__actions button:first-child{background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;border-color:transparent}
+
+/* ─────────────────────────── pricing ─────────────────────────── */
+.price{padding:32px 28px 30px;display:flex;flex-direction:column}
+.price--hero{border-color:rgba(59,130,246,.55);box-shadow:0 0 44px -18px rgba(59,130,246,.55),0 18px 40px -24px rgba(0,0,0,.9)}
+.price__tag{position:absolute;top:-11px;left:28px;font-size:9.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;padding:5px 12px;border-radius:999px;background:var(--gold);color:#171203}
+.price__name{font-size:.78rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--t3);margin-bottom:16px}
+.price__amt{display:flex;align-items:baseline;gap:8px;margin-bottom:6px}
+.price__amt b{font-size:3rem;font-weight:800;letter-spacing:-.04em;line-height:1}
+.price__amt span{color:var(--t3);font-size:.85rem;font-weight:700}
+.price__each{font-family:var(--mono);font-size:.78rem;color:var(--gold);margin-bottom:22px}
+.price ul{list-style:none;margin:0 0 26px;padding:0;display:grid;gap:11px}
+.price li{display:flex;gap:10px;font-size:.9rem;color:var(--t2)}
+.price li svg{width:16px;height:16px;flex:none;margin-top:3px;color:var(--blue-light)}
+.price .btn{margin-top:auto}
+.price__foot{text-align:center;margin-top:34px;font-size:.88rem;color:var(--t3);font-weight:600}
+
+/* ─────────────────────────── testimonials ─────────────────────────── */
+.quote{padding:30px 28px;display:flex;flex-direction:column;gap:20px}
+.quote__mark{width:26px;height:26px;color:var(--gold);opacity:.65}
+.quote p{font-size:1rem;line-height:1.65;color:#DCE5F2}
+.quote__who{display:flex;align-items:center;gap:12px;margin-top:auto;padding-top:20px;border-top:1px solid rgba(42,64,112,.7)}
+.quote__av{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:.82rem;background:linear-gradient(135deg,var(--blue),var(--blue-dark));flex:none}
+.quote__n{font-size:.88rem;font-weight:700}
+.quote__m{font-size:.76rem;color:var(--t3);font-weight:600}
+
+/* ─────────────────────────── faq ─────────────────────────── */
+.faq{max-width:840px;margin-inline:auto}
+.acc{border:1px solid var(--line);border-radius:var(--r-md);background:linear-gradient(158deg,rgba(18,32,64,.55),rgba(10,21,37,.7));margin-bottom:10px;overflow:hidden;transition:border-color .3s ease}
+.acc:hover{border-color:#38538C}
+.acc__btn{display:flex;align-items:center;gap:18px;width:100%;padding:20px 22px;text-align:left;font-weight:700;font-size:1rem;letter-spacing:-.01em}
+.acc__btn:hover{color:#fff}
+.acc__ic{width:22px;height:22px;margin-left:auto;flex:none;color:var(--gold);transition:transform .35s cubic-bezier(.2,.8,.3,1)}
+.acc[open] .acc__ic,.acc.is-open .acc__ic{transform:rotate(45deg)}
+.acc__panel{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.2,.8,.3,1)}
+.acc__panel > div{padding:0 22px 22px 62px;color:var(--t2);font-size:.94rem}
+.acc__idx{font-family:var(--mono);font-size:.78rem;color:var(--t3);flex:none;width:22px}
+
+/* ─────────────────────────── download band ─────────────────────────── */
+.band{background:linear-gradient(115deg,#0F2A6B,#1D4ED8 46%,#2563EB 74%,#12306E);position:relative;overflow:hidden}
+.band::after{content:'';position:absolute;inset:0;background:radial-gradient(760px 300px at 22% 120%,rgba(96,165,250,.4),transparent 70%);pointer-events:none}
+.band__in{padding:clamp(56px,7vw,88px) 0;text-align:center;position:relative;z-index:1}
+.band h2{margin-bottom:14px}
+.band p{color:rgba(226,236,255,.86);max-width:46ch;margin:0 auto 32px}
+.stores{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-bottom:26px}
+.store{display:flex;align-items:center;gap:11px;padding:11px 20px;border-radius:var(--r-sm);border:1px solid rgba(255,255,255,.28);background:rgba(6,10,20,.42);backdrop-filter:blur(6px);transition:background .3s ease,border-color .3s ease}
+.store:hover{background:rgba(6,10,20,.66);border-color:rgba(255,255,255,.5)}
+.store svg{width:22px;height:22px;flex:none}
+.store small{display:block;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(226,236,255,.72);font-weight:700}
+.store b{font-size:.95rem;font-weight:800;letter-spacing:-.02em}
+
+/* ─────────────────────────── footer ─────────────────────────── */
+.foot{padding-block:64px 34px;background:var(--surface);border-top:1px solid rgba(42,64,112,.6)}
+.foot__grid{display:grid;grid-template-columns:1.5fr repeat(3,1fr);gap:44px;margin-bottom:44px}
+.foot__brand p{color:var(--t2);font-size:.9rem;max-width:30ch;margin:16px 0 20px}
+.foot h4{font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--t3);margin-bottom:18px}
+.foot ul{list-style:none;margin:0;padding:0;display:grid;gap:11px}
+.foot li a{font-size:.9rem;color:var(--t2);font-weight:600;transition:color .25s ease}
+.foot li a:hover{color:var(--t1)}
+.socials{display:flex;gap:10px}
+.socials a{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;border:1px solid var(--line);color:var(--t2);transition:all .3s ease}
+.socials a:hover{color:var(--t1);border-color:#3C598F;background:rgba(18,32,64,.6)}
+.socials svg{width:16px;height:16px}
+.foot__bar{display:flex;flex-wrap:wrap;gap:12px 26px;align-items:center;padding-top:26px;border-top:1px solid rgba(42,64,112,.6);font-size:.82rem;color:var(--t3);font-weight:600}
+.foot__bar nav{display:flex;gap:22px;margin-left:auto}
+.foot__bar a:hover{color:var(--t2)}
+
+/* ─────────────────────────── reveal ─────────────────────────── */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .5s ease-out,transform .5s ease-out;transition-delay:var(--d,0ms)}
+.reveal.is-in{opacity:1;transform:none}
+
+/* ─────────────────────────── responsive ─────────────────────────── */
+@media (max-width:1080px){
+  .hero__grid{grid-template-columns:1fr;gap:56px}
+  .stage{min-height:520px}
+  .showcase{grid-template-columns:1fr;gap:44px}
+  .foot__grid{grid-template-columns:1fr 1fr;gap:36px}
+}
+@media (max-width:900px){
+  .nav__links,.nav__cta{display:none}
+  .nav__burger{display:grid;place-items:center}
+  .grid-3,.grid-3-feat{grid-template-columns:1fr 1fr}
+  .usecase{grid-template-columns:1fr}
+  .usecase__art{border-right:0;border-bottom:1px solid var(--line);min-height:260px}
+}
+@media (max-width:640px){
+  :root{--pad:20px}
+  .grid-3,.grid-3-feat{grid-template-columns:1fr}
+  .callchip{left:auto;right:-4px;bottom:-10px;width:214px}
+  .stage__back--1{transform:translate(20px,20px) rotate(5deg)}
+  .foot__grid{grid-template-columns:1fr}
+  .foot__bar nav{margin-left:0;flex-wrap:wrap}
+  .acc__panel > div{padding-left:22px}
+  .price__amt b{font-size:2.6rem}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  .reveal{opacity:1;transform:none}
+  .scanline{display:none}
+}
+</style>
 </head>
 <body>
-  <header class="nav">
-    <div class="wrap row">
-      <div class="brand">Jcscan<span>2connect</span></div>
-      <nav class="links">
-        <a href="/sms-consent">SMS Consent</a>
-        <a href="/sms-terms">SMS Terms</a>
-        <a href="/privacy">Privacy</a>
-        <a href="/terms">Terms</a>
+<div class="aura" aria-hidden="true"></div>
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- ══════════════ NAV ══════════════ -->
+<header class="nav" id="nav">
+  <div class="wrap nav__in">
+    <a class="brand" href="#top">
+      <svg class="brand__mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <path d="M16 2.5 28 7v9.2c0 7.4-5 12.2-12 14.3-7-2.1-12-6.9-12-14.3V7l12-4.5Z" fill="url(#bg1)" stroke="#3B82F6" stroke-width="1.2"/>
+        <path d="M16 10.4v10.2M10.9 15.5h10.2" stroke="#FACC15" stroke-width="2.2" stroke-linecap="round"/>
+        <defs><linearGradient id="bg1" x1="4" y1="2" x2="28" y2="30"><stop stop-color="#1D4ED8" stop-opacity=".55"/><stop offset="1" stop-color="#0A1525"/></linearGradient></defs>
+      </svg>
+      JCSafeScan
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#how">How it works</a>
+      <a href="#uses">Use cases</a>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav__cta">
+      <a href="#download" class="btn btn--ghost">Open the app</a>
+      <a href="#pricing" class="btn btn--primary">Get your QR</a>
+    </div>
+    <button class="nav__burger" aria-label="Open menu">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+<span id="top"></span>
+
+<!-- ══════════════ 1 · HERO ══════════════ -->
+<section class="section hero">
+  <div class="wrap hero__grid">
+    <div>
+      <p class="eyebrow reveal">Emergency QR · one-time purchase</p>
+      <h1 class="reveal" style="--d:60ms">
+        A stranger scans your car.<br />
+        <span class="grad">Your phone rings. Not your number.</span>
+      </h1>
+      <p class="lead reveal" style="--d:120ms">
+        JCSafeScan puts a small QR on the things you'd hate to lose. Whoever finds
+        them can reach you and your emergency contacts in one tap — and the number
+        never appears on their screen.
+      </p>
+      <div class="hero__cta reveal" style="--d:180ms">
+        <a href="#pricing" class="btn btn--primary">
+          Get your QR
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="#how" class="btn btn--ghost">See how it works</a>
+      </div>
+      <p class="hero__note reveal" style="--d:240ms"><span class="dot"></span> Live in 2 minutes · No monthly fee · Works with any phone camera</p>
+    </div>
+
+    <div class="stage reveal" style="--d:200ms" id="stage">
+      <div class="stage__back stage__back--1" aria-hidden="true"></div>
+      <div class="stage__back stage__back--2" aria-hidden="true"></div>
+
+      <!-- StickerMockup -->
+      <div class="sticker tilt" id="heroSticker">
+        <div class="shimmer" aria-hidden="true"></div>
+        <div class="sticker__band">
+          <span class="sticker__brand">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2 21 5.4v6.9c0 5.5-3.7 9.1-9 10.7-5.3-1.6-9-5.2-9-10.7V5.4L12 2Z" fill="rgba(255,255,255,.18)" stroke="#fff" stroke-width="1.3"/><path d="M12 8v7M8.5 11.5h7" stroke="#FACC15" stroke-width="2" stroke-linecap="round"/></svg>
+            JCSafeScan
+          </span>
+          <span class="sticker__kicker">EMERGENCY QR</span>
+        </div>
+        <hr class="hairline" />
+        <div class="sticker__body">
+          <div class="qrframe">
+            <span class="br br--tl"></span><span class="br br--tr"></span>
+            <span class="br br--bl"></span><span class="br br--br"></span>
+            <div data-qr="24" data-seed="7"></div>
+            <span class="scanline" aria-hidden="true"></span>
+          </div>
+          <p class="sticker__cta">SCAN TO CALL OWNER</p>
+          <div class="ext">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2 21 5.4v6.9c0 5.5-3.7 9.1-9 10.7-5.3-1.6-9-5.2-9-10.7V5.4L12 2Z" fill="#0A1525" stroke="#1D4ED8" stroke-width="1.4"/><path d="M12 8.4v7M8.5 11.9h7" stroke="#FACC15" stroke-width="2" stroke-linecap="round"/></svg>
+            <span class="ext__pill">10001</span>
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5" fill="#FACC15"/><path d="M12 7v10M7 12h10" stroke="#171203" stroke-width="2.6" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+        <hr class="hairline" />
+        <div class="sticker__tags">
+          <span>ACCIDENT</span><i></i><span>TRACKING</span><i></i><span>NO PARKING</span>
+        </div>
+        <div class="sticker__foot">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.7 3.8 9S14.5 18.4 12 21c-2.5-2.6-3.8-5.7-3.8-9S9.5 5.6 12 3Z"/></svg>jcsafescan.com</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.6 6.4 8.4 6 8.4-6"/></svg>support@jcsafescan.com</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.6 13.4 12.4 21.6a2 2 0 0 1-2.8 0l-7.2-7.2a2 2 0 0 1-.6-1.4V4.4A2 2 0 0 1 3.8 2.4h8.6a2 2 0 0 1 1.4.6l6.8 6.8a2 2 0 0 1 0 2.8Z"/><circle cx="7.4" cy="7.4" r="1.4" fill="currentColor" stroke="none"/></svg>#10001</span>
+        </div>
+      </div>
+
+      <!-- finder's screen -->
+      <div class="callchip">
+        <p class="callchip__top"><span class="pulse"></span> Finder's screen</p>
+        <p class="callchip__num">+91 ••••• ••1 42</p>
+        <p class="callchip__cap">Routed line · owner's number hidden</p>
+        <span class="callchip__btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6.6 3h3.2l1.6 4-2 1.3a12 12 0 0 0 5.3 5.3l1.3-2 4 1.6v3.2a2 2 0 0 1-2.2 2A17 17 0 0 1 4.6 5.2 2 2 0 0 1 6.6 3Z"/></svg>
+          Call owner
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 2 · TRUST BAR ══════════════ -->
+<section class="section section--flush trust">
+  <div class="wrap trust__in">
+    <span>10,000+ QRs deployed</span><i aria-hidden="true"></i>
+    <span>No phone number ever shown</span><i aria-hidden="true"></i>
+    <span>Works worldwide</span>
+  </div>
+</section>
+
+<!-- ══════════════ 3 · HOW IT WORKS ══════════════ -->
+<section class="section" id="how">
+  <div class="wrap">
+    <div class="head head--center reveal">
+      <p class="eyebrow" style="justify-content:center">Three steps, once</p>
+      <h2>Stick it. Forget it.<br />It works when you need it.</h2>
+      <p class="lead" style="margin-inline:auto">Setup takes about two minutes in the app. After that the sticker does the work on its own.</p>
+    </div>
+    <div class="grid-3">
+      <article class="glass tilt step reveal">
+        <span class="steppill"><span class="steppill__n">1</span><span class="steppill__l">Stick</span></span>
+        <svg class="step__ico" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="22" height="24" rx="4"/><path d="M11 10h10M11 15h10M11 20h6"/><path d="M22 26.5 27 22" stroke="#FACC15"/></svg>
+        <h3>Stick the QR on the item</h3>
+        <p>Peel and place it on the windshield, the collar, the bag handle. Then activate it in the app and add up to three emergency contacts.</p>
+      </article>
+      <article class="glass tilt step reveal" style="--d:100ms">
+        <span class="steppill"><span class="steppill__n">2</span><span class="steppill__l">Scan</span></span>
+        <svg class="step__ico" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11V6a2 2 0 0 1 2-2h5M28 11V6a2 2 0 0 0-2-2h-5M4 21v5a2 2 0 0 0 2 2h5M28 21v5a2 2 0 0 1-2 2h-5"/><path d="M4 16h24" stroke="#FACC15"/></svg>
+        <h3>A finder scans it</h3>
+        <p>No app needed on their side. Any phone camera opens the scan page, and it loads in every country on any network.</p>
+      </article>
+      <article class="glass tilt step reveal" style="--d:200ms">
+        <span class="steppill"><span class="steppill__n">3</span><span class="steppill__l">Call</span></span>
+        <svg class="step__ico" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4h4l2 5-2.6 1.8a16 16 0 0 0 7.8 7.8L22 16l5 2v4a2.6 2.6 0 0 1-2.9 2.6A23 23 0 0 1 6.4 6.9 2.6 2.6 0 0 1 9 4Z"/><path d="M20 5.5a7 7 0 0 1 6.5 6.5" stroke="#FACC15"/></svg>
+        <h3>Their dialer opens</h3>
+        <p>One tap connects them to you on a routed line. If you can't answer, the call falls through to your contacts. Your number stays private the whole time.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<hr class="hairline hairline--dim" />
+
+<!-- ══════════════ 4 · USE CASES ══════════════ -->
+<section class="section" id="uses">
+  <div class="wrap">
+    <div class="head reveal">
+      <p class="eyebrow">Four kinds of QR</p>
+      <h2>The same sticker, wherever it matters</h2>
+      <p class="lead">Each QR carries the details that fit the item — plate number, pet name, bag description — so the finder knows what they're holding.</p>
+    </div>
+
+    <div class="tabs reveal" role="tablist" aria-label="Use cases">
+      <button class="tab" role="tab" aria-selected="true" aria-controls="uc-car" id="tab-car">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 13.5 5 8a2 2 0 0 1 1.9-1.4h10.2A2 2 0 0 1 19 8l2 5.5v4.9a1 1 0 0 1-1 1h-1.6a1 1 0 0 1-1-1v-1.2H6.6v1.2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4.9Z"/><path d="M3.4 13.6h17.2M7 16.2h.01M17 16.2h.01"/></svg> Car
+      </button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="uc-pet" id="tab-pet" tabindex="-1">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><ellipse cx="6.4" cy="8.6" rx="2.1" ry="2.7"/><ellipse cx="17.6" cy="8.6" rx="2.1" ry="2.7"/><ellipse cx="10.2" cy="4.9" rx="1.8" ry="2.4"/><ellipse cx="13.8" cy="4.9" rx="1.8" ry="2.4"/><path d="M12 12.4c3.2 0 5.4 2.4 5.4 4.8s-2 2.9-3.4 3.4c-1.3.5-2.7.5-4 0-1.4-.5-3.4-1-3.4-3.4s2.2-4.8 5.4-4.8Z"/></svg> Pet
+      </button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="uc-bag" id="tab-bag" tabindex="-1">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="7" width="16" height="14" rx="2.6"/><path d="M9 7V4.8A1.8 1.8 0 0 1 10.8 3h2.4A1.8 1.8 0 0 1 15 4.8V7M9.5 11v6M14.5 11v6"/></svg> Luggage
+      </button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="uc-other" id="tab-other" tabindex="-1">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2.6" y="5" width="18.8" height="12" rx="2.2"/><path d="M2 20h20"/></svg> Other
+      </button>
+    </div>
+
+    <div class="glass usecase reveal" role="tabpanel" id="uc-car" aria-labelledby="tab-car">
+      <div class="usecase__art">
+        <svg viewBox="0 0 340 200" fill="none" aria-hidden="true">
+          <path d="M40 132 58 88a20 20 0 0 1 18-12h108a20 20 0 0 1 17 9l26 43" stroke="#60A5FA" stroke-width="2.4" stroke-linecap="round"/>
+          <rect x="26" y="128" width="288" height="34" rx="14" stroke="#3B82F6" stroke-width="2.4"/>
+          <path d="M78 78v50M148 76v52M206 84l14 44" stroke="#2A4070" stroke-width="2"/>
+          <circle cx="92" cy="162" r="17" stroke="#60A5FA" stroke-width="2.4"/><circle cx="248" cy="162" r="17" stroke="#60A5FA" stroke-width="2.4"/>
+          <rect x="112" y="88" width="34" height="30" rx="5" fill="#FACC15" opacity=".14" stroke="#FACC15" stroke-width="1.6"/>
+          <path d="M119 96h6v6h-6zM133 96h6v6h-6zM119 108h6v6h-6zM133 108h5v5h-5z" fill="#FACC15"/>
+          <path d="M262 118c14-9 26-4 30 6" stroke="#FACC15" stroke-width="2" stroke-linecap="round" stroke-dasharray="4 5"/>
+        </svg>
+      </div>
+      <div class="usecase__txt">
+        <h3>Car</h3>
+        <p>Someone clips your bumper in a parking garage and can't find you. They scan the sticker on your windshield and you're talking in ten seconds.</p>
+        <p class="dim" style="font-size:.86rem">Carries your plate number, so a tow crew or a first responder knows the vehicle is the right one.</p>
+        <a class="link" href="#pricing">Protect a car <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </div>
+
+    <div class="glass usecase reveal" role="tabpanel" id="uc-pet" aria-labelledby="tab-pet" hidden>
+      <div class="usecase__art">
+        <svg viewBox="0 0 340 200" fill="none" aria-hidden="true">
+          <path d="M96 150v-38c0-20 14-36 34-36h44c22 0 38 16 38 38v36" stroke="#60A5FA" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M212 114c14-6 24-18 24-32 0-6-4-10-9-8l-16 8" stroke="#3B82F6" stroke-width="2.4" stroke-linecap="round"/>
+          <circle cx="126" cy="60" r="26" stroke="#60A5FA" stroke-width="2.4"/>
+          <path d="M106 42 98 24l20 8M146 42l8-18-20 8" stroke="#3B82F6" stroke-width="2.4" stroke-linejoin="round"/>
+          <circle cx="118" cy="58" r="2.6" fill="#94A3B8"/><circle cx="136" cy="58" r="2.6" fill="#94A3B8"/>
+          <path d="M100 150v14M152 150v14M196 150v14M226 150v14" stroke="#2A4070" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M104 92h44" stroke="#FACC15" stroke-width="3" stroke-linecap="round"/>
+          <rect x="114" y="96" width="26" height="26" rx="5" fill="#FACC15" opacity=".14" stroke="#FACC15" stroke-width="1.6"/>
+          <path d="M119 101h5v5h-5zM130 101h5v5h-5zM119 112h5v5h-5zM130 112h4v4h-4z" fill="#FACC15"/>
+        </svg>
+      </div>
+      <div class="usecase__txt">
+        <h3>Pet</h3>
+        <p>Your dog slips the leash at the park. Whoever catches him scans the tag on his collar and calls you from exactly where he's standing.</p>
+        <p class="dim" style="font-size:.86rem">Carries his name and a line about temperament, so a stranger knows how to approach him.</p>
+        <a class="link" href="#pricing">Protect a pet <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </div>
+
+    <div class="glass usecase reveal" role="tabpanel" id="uc-bag" aria-labelledby="tab-bag" hidden>
+      <div class="usecase__art">
+        <svg viewBox="0 0 340 200" fill="none" aria-hidden="true">
+          <rect x="96" y="52" width="148" height="126" rx="16" stroke="#60A5FA" stroke-width="2.4"/>
+          <path d="M140 52V34a10 10 0 0 1 10-10h40a10 10 0 0 1 10 10v18" stroke="#3B82F6" stroke-width="2.4"/>
+          <path d="M128 74v82M212 74v82" stroke="#2A4070" stroke-width="2.4"/>
+          <rect x="152" y="94" width="36" height="36" rx="6" fill="#FACC15" opacity=".14" stroke="#FACC15" stroke-width="1.6"/>
+          <path d="M159 101h7v7h-7zM174 101h7v7h-7zM159 116h7v7h-7zM174 116h6v6h-6z" fill="#FACC15"/>
+          <path d="M60 178h220" stroke="#2A4070" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M244 96c16 0 26-9 26-22" stroke="#FACC15" stroke-width="2" stroke-linecap="round" stroke-dasharray="4 5"/>
+        </svg>
+      </div>
+      <div class="usecase__txt">
+        <h3>Luggage</h3>
+        <p>Your bag comes off the belt in the wrong city. Ground staff scan the tag and reach you before it's loaded onto another plane.</p>
+        <p class="dim" style="font-size:.86rem">Carries a short description of the bag, so it's matched to you without opening it.</p>
+        <a class="link" href="#pricing">Protect a bag <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </div>
+
+    <div class="glass usecase reveal" role="tabpanel" id="uc-other" aria-labelledby="tab-other" hidden>
+      <div class="usecase__art">
+        <svg viewBox="0 0 340 200" fill="none" aria-hidden="true">
+          <rect x="58" y="46" width="128" height="84" rx="9" stroke="#60A5FA" stroke-width="2.4"/>
+          <path d="M42 130h160l-9 14H51l-9-14Z" stroke="#3B82F6" stroke-width="2.4" stroke-linejoin="round"/>
+          <circle cx="252" cy="132" r="26" stroke="#60A5FA" stroke-width="2.4"/>
+          <path d="M252 132V96l16-10" stroke="#3B82F6" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M228 100l14-6 12 12" stroke="#2A4070" stroke-width="2.4" stroke-linecap="round"/>
+          <rect x="104" y="66" width="36" height="36" rx="6" fill="#FACC15" opacity=".14" stroke="#FACC15" stroke-width="1.6"/>
+          <path d="M111 73h7v7h-7zM126 73h7v7h-7zM111 88h7v7h-7zM126 88h6v6h-6z" fill="#FACC15"/>
+        </svg>
+      </div>
+      <div class="usecase__txt">
+        <h3>Other</h3>
+        <p>Laptop left in a cab. Keys dropped on a trail. A bike locked up and gone. Same sticker, same single tap back to you.</p>
+        <p class="dim" style="font-size:.86rem">Name the item yourself and the scan page shows it, so nobody has to guess who to look for.</p>
+        <a class="link" href="#pricing">Protect anything <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 5 · FEATURES ══════════════ -->
+<section class="section" id="features">
+  <div class="wrap">
+    <div class="head reveal">
+      <p class="eyebrow">What's in the app</p>
+      <h2>Reachable when it counts.<br />Quiet the rest of the time.</h2>
+    </div>
+    <div class="grid-3-feat">
+      <article class="glass tilt feat reveal">
+        <div class="feat__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M6.6 3h3.2l1.6 4-2 1.3a12 12 0 0 0 5.3 5.3l1.3-2 4 1.6v3.2a2 2 0 0 1-2.2 2A17 17 0 0 1 4.6 5.2 2 2 0 0 1 6.6 3Z"/><path d="M16 4.5 21 9M21 4.5 16 9"/></svg></div>
+        <h3>Masked calls</h3>
+        <p>Their dialer opens on a routed line. Your real number never reaches the browser, their screen, or their call log.</p>
+      </article>
+      <article class="glass tilt feat reveal" style="--d:70ms">
+        <div class="feat__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M18 8a6 6 0 1 0-12 0c0 6-2.5 7.5-2.5 7.5h17S18 14 18 8Z"/><path d="M10.3 19a2 2 0 0 0 3.4 0"/></svg></div>
+        <h3>Real-time scan alerts</h3>
+        <p>The moment your QR is scanned, your phone knows — with the time, the place, and the device that did it.</p>
+      </article>
+      <article class="glass tilt feat reveal" style="--d:140ms">
+        <div class="feat__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg></div>
+        <h3>Location-aware scan log</h3>
+        <p>Every scan is saved with a map pin, so you can see where your item turned up and when.</p>
+      </article>
+      <article class="glass tilt feat reveal" style="--d:70ms">
+        <div class="feat__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="9" cy="8" r="3.4"/><path d="M3 20c0-3.3 2.7-5.4 6-5.4s6 2.1 6 5.4"/><path d="M17 9.5h4M19 7.5v4"/></svg></div>
+        <h3>Multi-contact fallback</h3>
+        <p>If you don't pick up, the finder can reach up to three people you trust, in the order you set.</p>
+      </article>
+      <article class="glass tilt feat reveal" style="--d:140ms">
+        <div class="feat__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg></div>
+        <h3>Blocked-caller list</h3>
+        <p>One tap blocks a number for good. They can still scan; the call simply never connects.</p>
+      </article>
+      <article class="glass tilt feat reveal" style="--d:210ms">
+        <div class="feat__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M7 9V4.5h10V9"/><rect x="4" y="9" width="16" height="7" rx="2"/><path d="M7 14.5h10V21H7z"/></svg></div>
+        <h3>Printable PDF sticker</h3>
+        <p>Lost the original? Download the same sticker from the app and print a replacement in a minute.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<hr class="hairline hairline--dim" />
+
+<!-- ══════════════ 6 · STICKER SHOWCASE ══════════════ -->
+<section class="section">
+  <div class="wrap">
+    <div class="head head--center reveal">
+      <p class="eyebrow" style="justify-content:center">One design, two places</p>
+      <h2>What you print is what you manage</h2>
+      <p class="lead" style="margin-inline:auto">The sticker on your car and the screen in your pocket are the same object. Same code, same extension, same details.</p>
+    </div>
+
+    <div class="showcase">
+      <div class="showcase__col reveal">
+        <div class="sticker sticker--lg" id="showSticker">
+          <div class="shimmer" aria-hidden="true"></div>
+          <div class="sticker__band">
+            <span class="sticker__brand">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2 21 5.4v6.9c0 5.5-3.7 9.1-9 10.7-5.3-1.6-9-5.2-9-10.7V5.4L12 2Z" fill="rgba(255,255,255,.18)" stroke="#fff" stroke-width="1.3"/><path d="M12 8v7M8.5 11.5h7" stroke="#FACC15" stroke-width="2" stroke-linecap="round"/></svg>
+              JCSafeScan
+            </span>
+            <span class="sticker__kicker">EMERGENCY QR</span>
+          </div>
+          <hr class="hairline" />
+          <div class="sticker__body">
+            <div class="qrframe">
+              <span class="br br--tl"></span><span class="br br--tr"></span>
+              <span class="br br--bl"></span><span class="br br--br"></span>
+              <div data-qr="24" data-seed="7"></div>
+            </div>
+            <p class="sticker__cta">SCAN TO CALL OWNER</p>
+            <div class="ext">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2 21 5.4v6.9c0 5.5-3.7 9.1-9 10.7-5.3-1.6-9-5.2-9-10.7V5.4L12 2Z" fill="#0A1525" stroke="#1D4ED8" stroke-width="1.4"/><path d="M12 8.4v7M8.5 11.9h7" stroke="#FACC15" stroke-width="2" stroke-linecap="round"/></svg>
+              <span class="ext__pill">10001</span>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5" fill="#FACC15"/><path d="M12 7v10M7 12h10" stroke="#171203" stroke-width="2.6" stroke-linecap="round"/></svg>
+            </div>
+          </div>
+          <hr class="hairline" />
+          <div class="sticker__tags"><span>ACCIDENT</span><i></i><span>TRACKING</span><i></i><span>NO PARKING</span></div>
+          <div class="sticker__foot">
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.7 3.8 9S14.5 18.4 12 21c-2.5-2.6-3.8-5.7-3.8-9S9.5 5.6 12 3Z"/></svg>jcsafescan.com</span>
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.6 6.4 8.4 6 8.4-6"/></svg>support@jcsafescan.com</span>
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.6 13.4 12.4 21.6a2 2 0 0 1-2.8 0l-7.2-7.2a2 2 0 0 1-.6-1.4V4.4A2 2 0 0 1 3.8 2.4h8.6a2 2 0 0 1 1.4.6l6.8 6.8a2 2 0 0 1 0 2.8Z"/><circle cx="7.4" cy="7.4" r="1.4" fill="currentColor" stroke="none"/></svg>#10001</span>
+          </div>
+        </div>
+        <p class="caption">Printable sticker · PDF, print-ready</p>
+      </div>
+
+      <div class="showcase__col reveal" style="--d:120ms">
+        <div class="phone">
+          <div class="phone__screen">
+            <div class="phone__notch" aria-hidden="true"></div>
+            <div class="phone__bar">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+              <h4>QR details</h4>
+              <span class="chip">Active</span>
+            </div>
+            <div class="mini">
+              <div class="mini__band"><span>JCSAFESCAN</span><span>#10001</span></div>
+              <div class="mini__body"><div data-qr="21" data-seed="7"></div></div>
+            </div>
+            <div class="row"><span>Type</span><span>Car</span></div>
+            <div class="row"><span>Plate</span><span style="font-family:var(--mono);letter-spacing:.05em">MH 31 AB 4472</span></div>
+            <div class="row"><span>Scans this month</span><span>4</span></div>
+            <p style="font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--t3);margin:16px 0 10px">Emergency contacts</p>
+            <div class="contact"><span class="contact__av">A</span><span><span class="contact__n">Ananya (you)</span><br /><span class="contact__r">Owner</span></span><span class="contact__ord">01</span></div>
+            <div class="contact"><span class="contact__av">R</span><span><span class="contact__n">Rohit</span><br /><span class="contact__r">Brother</span></span><span class="contact__ord">02</span></div>
+            <div class="contact"><span class="contact__av">M</span><span><span class="contact__n">Meera</span><br /><span class="contact__r">Partner</span></span><span class="contact__ord">03</span></div>
+            <div class="phone__actions">
+              <button type="button">Download PDF</button>
+              <button type="button">Disable QR</button>
+            </div>
+          </div>
+        </div>
+        <p class="caption">In the app · same code, same contacts</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 7 · PRICING ══════════════ -->
+<section class="section" id="pricing">
+  <div class="wrap">
+    <div class="head head--center reveal">
+      <p class="eyebrow" style="justify-content:center">Pay once</p>
+      <h2>Five dollars. Then never again.</h2>
+      <p class="lead" style="margin-inline:auto">Buy the sticker and you're done. The app, the call routing, and your scan history are included for as long as the QR exists.</p>
+    </div>
+    <div class="grid-3">
+      <article class="glass tilt price reveal">
+        <p class="price__name">Single QR</p>
+        <p class="price__amt"><b>$5</b><span>one-time</span></p>
+        <p class="price__each">$5.00 per QR</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 7"/></svg>1 weatherproof sticker</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 7"/></svg>3 emergency contacts</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 7"/></svg>Masked calls, forever</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 7"/></svg>Printable PDF copy</li>
+        </ul>
+        <a href="#download" class="btn btn--ghost btn--wide">Buy one QR</a>
+      </article>
+
+      <article class="glass tilt price price--hero reveal" style="--d:100ms">
+        <span class="price__tag">Most bought</span>
+        <p class="price__name">5-pack</p>
+        <p class="price__amt"><b>$22</b><span>one-time</span></p>
+        <p class="price__each">$4.40 per QR · save $3</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 7"/></svg>5 stickers, mix any types</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 7"/></svg>Car, pet, luggage or other</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 7"/></svg>Full scan history on each</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 7"/></svg>Enable or disable any time</li>
+        </ul>
+        <a href="#download" class="btn btn--primary btn--wide">Buy the 5-pack</a>
+      </article>
+
+      <article class="glass tilt price reveal" style="--d:200ms">
+        <p class="price__name">10-pack</p>
+        <p class="price__amt"><b>$40</b><span>one-time</span></p>
+        <p class="price__each">$4.00 per QR · save $10</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 7"/></svg>10 stickers, mix any types</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 7"/></svg>Best for a family or fleet</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 7"/></svg>One app, every sticker</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 7"/></svg>Priority email support</li>
+        </ul>
+        <a href="#download" class="btn btn--ghost btn--wide">Buy the 10-pack</a>
+      </article>
+    </div>
+    <p class="price__foot">No subscription. No renewal. Nothing to cancel.</p>
+  </div>
+</section>
+
+<hr class="hairline hairline--dim" />
+
+<!-- ══════════════ 8 · TESTIMONIALS ══════════════ -->
+<section class="section">
+  <div class="wrap">
+    <div class="head reveal">
+      <p class="eyebrow">From people who needed it</p>
+      <h2>The call that came in time</h2>
+    </div>
+    <div class="grid-3">
+      <article class="glass tilt quote reveal">
+        <svg class="quote__mark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.6 5C6 6.6 3.6 9.9 3.6 14.1c0 2.9 1.8 4.9 4.3 4.9 2.2 0 3.9-1.6 3.9-3.8 0-2.1-1.5-3.7-3.5-3.7-.4 0-.9.1-1 .1.4-1.8 2.1-3.9 4-5L9.6 5Zm10 0c-3.6 1.6-6 4.9-6 9.1 0 2.9 1.8 4.9 4.3 4.9 2.2 0 3.9-1.6 3.9-3.8 0-2.1-1.5-3.7-3.5-3.7-.4 0-.9.1-1 .1.4-1.8 2.1-3.9 4-5L19.6 5Z"/></svg>
+        <p>Bruno got out on Diwali night with all the noise. A family two streets over scanned his tag and called me in under a minute. I never had to print my number on a collar.</p>
+        <div class="quote__who"><span class="quote__av">AR</span><span><span class="quote__n">Ananya R.</span><br /><span class="quote__m">Pet parent · Pune</span></span></div>
+      </article>
+      <article class="glass tilt quote reveal" style="--d:100ms">
+        <svg class="quote__mark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.6 5C6 6.6 3.6 9.9 3.6 14.1c0 2.9 1.8 4.9 4.3 4.9 2.2 0 3.9-1.6 3.9-3.8 0-2.1-1.5-3.7-3.5-3.7-.4 0-.9.1-1 .1.4-1.8 2.1-3.9 4-5L9.6 5Zm10 0c-3.6 1.6-6 4.9-6 9.1 0 2.9 1.8 4.9 4.3 4.9 2.2 0 3.9-1.6 3.9-3.8 0-2.1-1.5-3.7-3.5-3.7-.4 0-.9.1-1 .1.4-1.8 2.1-3.9 4-5L19.6 5Z"/></svg>
+        <p>Someone boxed me in at six in the morning. He scanned the windshield sticker and moved his car before I'd finished my coffee. No note, no scratched paint, no shouting.</p>
+        <div class="quote__who"><span class="quote__av">MT</span><span><span class="quote__n">Marcus T.</span><br /><span class="quote__m">Car owner · Chicago</span></span></div>
+      </article>
+      <article class="glass tilt quote reveal" style="--d:200ms">
+        <svg class="quote__mark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.6 5C6 6.6 3.6 9.9 3.6 14.1c0 2.9 1.8 4.9 4.3 4.9 2.2 0 3.9-1.6 3.9-3.8 0-2.1-1.5-3.7-3.5-3.7-.4 0-.9.1-1 .1.4-1.8 2.1-3.9 4-5L9.6 5Zm10 0c-3.6 1.6-6 4.9-6 9.1 0 2.9 1.8 4.9 4.3 4.9 2.2 0 3.9-1.6 3.9-3.8 0-2.1-1.5-3.7-3.5-3.7-.4 0-.9.1-1 .1.4-1.8 2.1-3.9 4-5L19.6 5Z"/></svg>
+        <p>I fly twice a month and both bags carry one. Ground staff in Doha called me directly instead of filing a report. The bag caught up with me the same evening.</p>
+        <div class="quote__who"><span class="quote__av">PS</span><span><span class="quote__n">Priya S.</span><br /><span class="quote__m">Frequent traveller · Bengaluru</span></span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 9 · FAQ ══════════════ -->
+<section class="section" id="faq">
+  <div class="wrap">
+    <div class="head head--center reveal">
+      <p class="eyebrow" style="justify-content:center">Questions people ask first</p>
+      <h2>Straight answers</h2>
+    </div>
+    <div class="faq" id="faqList">
+      <!-- filled from JS-free markup below -->
+      <div class="acc reveal">
+        <button class="acc__btn" aria-expanded="false"><span class="acc__idx">01</span> Is my phone number visible to the person scanning?
+          <svg class="acc__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+        <div class="acc__panel"><div>No. The scan page shows a <em>Call owner</em> button, not a number. Tapping it opens their dialer on a routed line, so your real number never reaches the browser, their screen, or their call log.</div></div>
+      </div>
+      <div class="acc reveal">
+        <button class="acc__btn" aria-expanded="false"><span class="acc__idx">02</span> What if I lose my phone?
+          <svg class="acc__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+        <div class="acc__panel"><div>Your QR keeps working. Calls fall through to the emergency contacts you registered, in the order you chose, so somebody who can help still picks up.</div></div>
+      </div>
+      <div class="acc reveal">
+        <button class="acc__btn" aria-expanded="false"><span class="acc__idx">03</span> Does it work internationally?
+          <svg class="acc__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+        <div class="acc__panel"><div>Yes. Any phone camera in any country opens the scan page, and call routing works across borders. Nothing needs to be installed on the finder's phone.</div></div>
+      </div>
+      <div class="acc reveal">
+        <button class="acc__btn" aria-expanded="false"><span class="acc__idx">04</span> What if the sticker is damaged?
+          <svg class="acc__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+        <div class="acc__panel"><div>Open the app and download the printable PDF. Print it, stick it, and carry on — same code, same contacts, same history.</div></div>
+      </div>
+      <div class="acc reveal">
+        <button class="acc__btn" aria-expanded="false"><span class="acc__idx">05</span> Can I disable a QR?
+          <svg class="acc__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+        <div class="acc__panel"><div>Any time, instantly. A disabled QR shows a neutral page and reaches nobody until you switch it back on. Useful when you sell the car or retire a bag.</div></div>
+      </div>
+      <div class="acc reveal">
+        <button class="acc__btn" aria-expanded="false"><span class="acc__idx">06</span> How do you handle spam callers?
+          <svg class="acc__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+        <div class="acc__panel"><div>Every scan is listed with the caller's routed number. Block one from the list in a single tap — they can still scan, but the call never connects.</div></div>
+      </div>
+      <div class="acc reveal">
+        <button class="acc__btn" aria-expanded="false"><span class="acc__idx">07</span> How does payment work?
+          <svg class="acc__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+        <div class="acc__panel"><div>One payment for the sticker, in the app or on this site. Cards and UPI are accepted, and your QR is ready to activate the moment it clears.</div></div>
+      </div>
+      <div class="acc reveal">
+        <button class="acc__btn" aria-expanded="false"><span class="acc__idx">08</span> Is there a subscription?
+          <svg class="acc__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+        <div class="acc__panel"><div>No. The app, call routing and scan history are included for the life of the QR. There is nothing to renew and nothing to cancel.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 10 · DOWNLOAD ══════════════ -->
+<section class="section section--flush" id="download">
+  <hr class="hairline" />
+  <div class="band">
+    <div class="wrap band__in">
+      <h2 class="reveal">Start protecting in 2 minutes</h2>
+      <p class="reveal" style="--d:80ms">Download the app, activate your QR, add your contacts. That's the whole setup.</p>
+      <div class="stores reveal" style="--d:140ms">
+        <a class="store" href="#" aria-label="Download JCSafeScan on the App Store">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4.6"/><path d="M8.4 15.6 12 9.2l3.6 6.4M9.6 13.6h4.8"/></svg>
+          <span><small>Download on the</small><b>App Store</b></span>
+        </a>
+        <a class="store" href="#" aria-label="Get JCSafeScan on Google Play">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M5 3.4 17.6 12 5 20.6V3.4Z"/><path d="m5 3.4 8.6 8.6L5 20.6"/></svg>
+          <span><small>Get it on</small><b>Google Play</b></span>
+        </a>
+      </div>
+      <a href="#pricing" class="btn btn--gold reveal" style="--d:200ms">Get your QR</a>
+    </div>
+  </div>
+  <hr class="hairline" />
+</section>
+
+</main>
+
+<!-- ══════════════ 11 · FOOTER ══════════════ -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot__grid">
+      <div class="foot__brand">
+        <a class="brand" href="#top">
+          <svg class="brand__mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <path d="M16 2.5 28 7v9.2c0 7.4-5 12.2-12 14.3-7-2.1-12-6.9-12-14.3V7l12-4.5Z" fill="url(#bg2)" stroke="#3B82F6" stroke-width="1.2"/>
+            <path d="M16 10.4v10.2M10.9 15.5h10.2" stroke="#FACC15" stroke-width="2.2" stroke-linecap="round"/>
+            <defs><linearGradient id="bg2" x1="4" y1="2" x2="28" y2="30"><stop stop-color="#1D4ED8" stop-opacity=".55"/><stop offset="1" stop-color="#0A1525"/></linearGradient></defs>
+          </svg>
+          JCSafeScan
+        </a>
+        <p>Peace of mind in an emergency, without giving up your privacy.</p>
+        <div class="socials">
+          <a href="#" aria-label="JCSafeScan on X"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 3h3l-6.6 7.5L21.7 21h-5.9l-4.3-5.6L6.4 21H3.3l7-8L2.6 3h6l3.9 5.2L17.5 3Zm-1.1 16.2h1.7L7.7 4.7H5.9l10.5 14.5Z"/></svg></a>
+          <a href="#" aria-label="JCSafeScan on Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="18" height="18" rx="5.4"/><circle cx="12" cy="12" r="4"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="JCSafeScan on LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="4.4"/><path d="M7.4 10.6V17M7.4 7.6v.01M11.6 17v-3.6a2.2 2.2 0 0 1 4.4 0V17"/></svg></a>
+          <a href="mailto:support@jcsafescan.com" aria-label="Email support"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="5" width="18" height="14" rx="2.6"/><path d="m3.8 6.6 8.2 5.8 8.2-5.8"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#how">How it works</a></li>
+          <li><a href="#uses">Use cases</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#download">Download the app</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="mailto:support@jcsafescan.com">Contact</a></li>
+          <li><a href="#">Press kit</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Privacy policy</a></li>
+          <li><a href="#">Terms of service</a></li>
+          <li><a href="#">Refund policy</a></li>
+          <li><a href="#">Data requests</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot__bar">
+      <span>© 2026 JCSafeScan</span>
+      <span>support@jcsafescan.com</span>
+      <nav aria-label="Legal">
+        <a href="#">Privacy</a><a href="#">Terms</a><a href="#">Refunds</a>
       </nav>
     </div>
-  </header>
+  </div>
+</footer>
 
-  <section class="hero">
-    <div class="wrap">
-      <h1>QR stickers that put finders in touch with owners &mdash; without exposing phone numbers.</h1>
-      <p class="lead">Jcscan2connect gives you a QR sticker for your car, pet, luggage, or valuables. When a finder scans it, they can reach you (or the people you trust) with a single tap. Real numbers are never revealed.</p>
-      <form class="waitlist" method="POST" action="/waitlist" novalidate>
-        <input type="email" name="email" required placeholder="you@example.com" aria-label="Email address" />
-        <button class="btn btn-primary" type="submit">Get a QR sticker</button>
-      </form>
-      <p style="font-size:13px; color:var(--muted); margin:10px 0 0;">Join the early-access list &mdash; we'll email you when stickers are shipping in your area.</p>
-      <div class="cta-row" style="margin-top:20px;">
-        <a class="btn btn-ghost" href="#how">See how it works</a>
-      </div>
-    </div>
-  </section>
+<script>
+(function () {
+  'use strict';
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  <section id="how">
-    <div class="wrap">
-      <h2>How it works</h2>
-      <p class="sub">Three steps. Owner and finder both stay private.</p>
-      <div class="grid3">
-        <div class="card">
-          <div class="num">1</div>
-          <h3>Stick it</h3>
-          <p>Peel and apply the QR sticker to your car, pet tag, luggage, laptop, or bike. Each sticker is unique to your account.</p>
-        </div>
-        <div class="card">
-          <div class="num">2</div>
-          <h3>Scan</h3>
-          <p>A finder points any phone camera at the sticker. A safe web page opens &mdash; no download needed.</p>
-        </div>
-        <div class="card">
-          <div class="num">3</div>
-          <h3>Call</h3>
-          <p>They tap "Call Owner" and their native dialer opens. Your registered contacts stay in the loop, phone numbers never travel through the browser.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+  /* ── QR renderer: finder patterns + deterministic data field ── */
+  function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+  function buildQR(host){
+    var n = parseInt(host.getAttribute('data-qr'),10) || 24;
+    var rnd = mulberry(parseInt(host.getAttribute('data-seed'),10) || 1);
+    var q = 2, size = n + q*2, cells = [];
+    function finder(ox,oy){
+      for(var y=0;y<7;y++)for(var x=0;x<7;x++){
+        var edge = x===0||x===6||y===0||y===6;
+        var core = x>=2&&x<=4&&y>=2&&y<=4;
+        if(edge||core) cells.push([ox+x,oy+y]);
+      }
+    }
+    var taken = {};
+    function mark(x,y){taken[x+','+y]=1}
+    [[0,0],[n-7,0],[0,n-7]].forEach(function(p){
+      finder(p[0],p[1]);
+      for(var y=-1;y<8;y++)for(var x=-1;x<8;x++) mark(p[0]+x,p[1]+y);
+    });
+    for(var i=8;i<n-8;i++){ if(i%2===0){cells.push([i,6]);cells.push([6,i]);} mark(i,6); mark(6,i); }
+    for(var y2=0;y2<n;y2++)for(var x2=0;x2<n;x2++){
+      if(taken[x2+','+y2]) continue;
+      if(rnd()>0.52) cells.push([x2,y2]);
+    }
+    var r = cells.map(function(c){
+      return '<rect x="'+(c[0]+q)+'" y="'+(c[1]+q)+'" width="1" height="1" rx="0.16"/>';
+    }).join('');
+    host.innerHTML = '<svg viewBox="0 0 '+size+' '+size+'" fill="#0A1525" shape-rendering="crispEdges" role="img" aria-label="JCSafeScan emergency QR code">'+r+'</svg>';
+  }
+  document.querySelectorAll('[data-qr]').forEach(buildQR);
 
-  <section>
-    <div class="wrap stripe">
-      <div class="grid2">
-        <div>
-          <h2>Alerts to the people who matter</h2>
-          <p class="sub">You register up to three contacts when you activate a QR. When your sticker is scanned, we notify those contacts by SMS so they know a scan happened, even if the finder never taps "Call". Every contact confirms their own number by reply before they receive anything &mdash; nobody is signed up by someone else.</p>
-          <a class="btn btn-primary" href="/sms-consent">Read the SMS opt-in details</a>
-        </div>
-        <div class="card" style="background:#fff;">
-          <h3 style="color:var(--blue);">Message flow</h3>
-          <ol style="padding-left:20px; margin:12px 0; color:var(--muted); font-size:14px;">
-            <li>Owner adds a contact's number in the app and confirms they have that person's permission to send one confirmation text.</li>
-            <li>Contact receives one confirmation SMS.</li>
-            <li>Contact replies <strong>YES</strong> to opt in &mdash; or the number is deleted after 24 h.</li>
-            <li>From then on, contact receives an alert only when the QR is scanned. Reply <strong>STOP</strong> anytime to opt out.</li>
-          </ol>
-        </div>
-      </div>
-    </div>
-  </section>
+  /* ── sticky nav ── */
+  var nav = document.getElementById('nav');
+  function onScroll(){ nav.classList.toggle('is-stuck', window.scrollY > 16); }
+  onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
 
-  <section>
-    <div class="wrap">
-      <h2>What it's for</h2>
-      <p class="sub">Sticker use cases we've built for.</p>
-      <div class="grid3">
-        <div class="card"><h3>&#128663; Cars</h3><p>Blocked parking, a minor bump, lights left on. A finder can reach you in seconds without leaving a note.</p></div>
-        <div class="card"><h3>&#128021; Pets</h3><p>Slip the QR onto a collar tag. If your pet is found, the finder is one tap away from you and your family.</p></div>
-        <div class="card"><h3>&#128188; Luggage &amp; valuables</h3><p>Bags, laptops, bikes, keys. Turn "found something" into "returned to owner" without exposing your number publicly.</p></div>
-      </div>
-    </div>
-  </section>
+  /* ── scroll reveal ── */
+  var els = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window && !reduce) {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('is-in'); io.unobserve(e.target); }});
+    }, {rootMargin:'0px 0px -12% 0px', threshold:0.06});
+    els.forEach(function(el){ io.observe(el); });
+  } else {
+    els.forEach(function(el){ el.classList.add('is-in'); });
+  }
 
-  <section>
-    <div class="wrap">
-      <h2>About Jcscan2connect</h2>
-      <p class="sub" style="max-width:720px;">Jcscan2connect is a sole proprietorship registered at 2220 Fraser St, Aurora, CO 80014, United States. We build the QR sticker service and operate the accompanying mobile app. Reach us at <a href="mailto:support@jcscan2connect.com">support@jcscan2connect.com</a>.</p>
-    </div>
-  </section>
+  /* ── hero parallax ── */
+  var stage = document.getElementById('stage');
+  if (stage && !reduce) {
+    window.addEventListener('scroll', function(){
+      var y = Math.min(window.scrollY, 700);
+      stage.style.transform = 'translateY(' + (y * -0.06) + 'px)';
+    }, {passive:true});
+  }
 
-  <section>
-    <div class="wrap">
-      <div class="callout">
-        <h3>Not an emergency service</h3>
-        <p>Jcscan2connect is a communication tool between a finder and an owner. We do not send emergency or public-safety alerts, and we do not contact police, fire, ambulance, or any other agency. In an emergency, call 911.</p>
-      </div>
-    </div>
-  </section>
+  /* ── card tilt (max 3°) ── */
+  if (!reduce && window.matchMedia('(hover:hover)').matches) {
+    document.querySelectorAll('.tilt').forEach(function(card){
+      card.addEventListener('pointermove', function(e){
+        var r = card.getBoundingClientRect();
+        var px = (e.clientX - r.left) / r.width - .5;
+        var py = (e.clientY - r.top) / r.height - .5;
+        card.style.transform = 'perspective(900px) rotateX(' + (-py*3).toFixed(2) + 'deg) rotateY(' + (px*3).toFixed(2) + 'deg) translateY(-2px)';
+      });
+      card.addEventListener('pointerleave', function(){ card.style.transform = ''; });
+    });
+  }
 
-  <footer>
-    <div class="wrap row">
-      <div>&copy; 2026 Jcscan2connect &middot; 2220 Fraser St, Aurora, CO 80014</div>
-      <div>
-        <a href="/sms-consent">SMS Consent</a>
-        <a href="/sms-terms">SMS Terms</a>
-        <a href="/privacy">Privacy</a>
-        <a href="/terms">Terms</a>
-        <a href="mailto:support@jcscan2connect.com">Support</a>
-      </div>
-    </div>
-  </footer>
+  /* ── use-case tabs ── */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  function select(tab){
+    tabs.forEach(function(t){
+      var on = t === tab;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+    });
+  }
+  tabs.forEach(function(tab, i){
+    tab.addEventListener('click', function(){ select(tab); });
+    tab.addEventListener('keydown', function(e){
+      var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if(!d) return;
+      e.preventDefault();
+      var next = tabs[(i + d + tabs.length) % tabs.length];
+      select(next); next.focus();
+    });
+  });
+
+  /* ── FAQ accordion ── */
+  document.querySelectorAll('.acc').forEach(function(item){
+    var btn = item.querySelector('.acc__btn');
+    var panel = item.querySelector('.acc__panel');
+    btn.addEventListener('click', function(){
+      var open = btn.getAttribute('aria-expanded') === 'true';
+      document.querySelectorAll('.acc').forEach(function(o){
+        o.classList.remove('is-open');
+        o.querySelector('.acc__btn').setAttribute('aria-expanded','false');
+        o.querySelector('.acc__panel').style.maxHeight = null;
+      });
+      if(!open){
+        item.classList.add('is-open');
+        btn.setAttribute('aria-expanded','true');
+        panel.style.maxHeight = panel.scrollHeight + 'px';
+      }
+    });
+  });
+})();
+</script>
 </body>
 </html>
