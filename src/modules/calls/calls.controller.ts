@@ -139,6 +139,14 @@ export async function incomingRoute(req: Request, res: Response, next: NextFunct
     }
 
     const callerId = (await import('../../config/env')).env.twilioCallerIdNumber;
+    // Mask the owner's real number in logs for safety.
+    const maskedTarget =
+      resolved.targetMobile.length > 4
+        ? '***' + resolved.targetMobile.slice(-4)
+        : '***';
+    console.log(
+      `[twilio-incoming-route] bridging to ${resolved.label}  callerId=${callerId}  target=${maskedTarget}`,
+    );
     const twiml = `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Say voice="alice">Connecting you now.</Say>
@@ -146,7 +154,6 @@ export async function incomingRoute(req: Request, res: Response, next: NextFunct
     <Number>${resolved.targetMobile}</Number>
   </Dial>
 </Response>`;
-    console.log(`[twilio-incoming-route] bridging to ${resolved.label}`);
     res.type('text/xml').send(twiml);
   } catch (err) {
     next(err);

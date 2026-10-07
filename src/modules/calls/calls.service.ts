@@ -249,6 +249,35 @@ export async function buildProxyDialUrl(
   // did in the Voice-SDK flow.
   await logScan(qr.id, req, targetType === 'OWNER' ? 'CALL_OWNER' : 'CALL_EMERGENCY').catch(() => {});
 
+  // Resolve the target mobile so we can seed a CallLog row that the owner
+  // will see in Call History. The number itself is NOT returned to the
+  // scanner — only stored server-side.
+  let targetMobile = qr.ownerMobile;
+  if (targetType === 'EMERGENCY') {
+    const contact = contactId
+      ? qr.emergencyContacts.find((c) => c.id === contactId)
+      : qr.emergencyContacts[0];
+    if (contact) targetMobile = contact.mobile;
+  }
+
+  // Create the CallLog row NOW with status INITIATED. When Twilio's inbound
+  // webhook fires (shortly after), `attachCallSidToPendingLog` finds this
+  // row and tags the CallSid onto it; the Dial status callback then updates
+  // duration + final status.
+  const { ipAddress } = extractDeviceInfo(req);
+  await prisma.callLog
+    .create({
+      data: {
+        qrId: qr.id,
+        callerType: targetType,
+        targetMobile,
+        status: 'INITIATED',
+        callerIp: ipAddress,
+        callerRef: callerFingerprint(req),
+      },
+    })
+    .catch((err) => console.warn('[dial] CallLog create failed:', err));
+
   // Build the DTMF payload. Pattern: <extension>#<0=owner|1=emergency>[<contactIndex>]#
   //   10005#0#     → route to owner of extension 10005
   //   10005#1#     → route to first emergency contact of 10005
