@@ -33,15 +33,19 @@ export function createApp(): Express {
 
   // CORS runs BEFORE helmet so preflight OPTIONS gets a proper
   // Access-Control-Allow-Origin response and short-circuits before helmet's
-  // cross-origin policies can interfere. `origin: true` reflects the caller's
-  // Origin header for every request, which covers:
-  //   - Android/iOS emulators running the native Flutter app (no CORS anyway)
-  //   - Flutter web on any localhost port
-  //   - The scan page and any hosted web frontend
-  // Lock this down later by swapping `origin: true` for an allow-list.
+  // cross-origin policies can interfere. Allow-list covers:
+  //   - the Vercel-hosted frontend (env.webBaseUrl) that owns /, /scan/*, /legal
+  //   - Flutter web dev builds on localhost/127.0.0.1 (any port)
+  //   - Native Flutter builds send no Origin header at all; cors() permits those.
+  const localhostRe = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/;
   app.use(
     cors({
-      origin: true,
+      origin(origin, cb) {
+        if (!origin) return cb(null, true);
+        if (origin === env.webBaseUrl) return cb(null, true);
+        if (localhostRe.test(origin)) return cb(null, true);
+        return cb(new Error(`CORS blocked for origin ${origin}`));
+      },
       credentials: true,
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
@@ -50,11 +54,11 @@ export function createApp(): Express {
     }),
   );
 
-  // Helmet with the Cross-Origin-Resource-Policy relaxed so browsers on other
-  // origins (Flutter web, the scan page under a different host) can actually
-  // consume responses from this API. Also whitelist the Twilio Voice SDK
-  // origins in CSP so the scan page's masked-call flow can load `twilio.min.js`
-  // from sdk.twilio.com and open the WebSocket to twilio.com for audio.
+  // Helmet with Cross-Origin-Resource-Policy relaxed so browsers on other
+  // origins (the Vercel-hosted scan page, Flutter web) can consume this API
+  // and the /uploads static images. CSP stays tight since this origin now
+  // only serves JSON + a small set of static image responses — the scan
+  // page itself (and its Twilio Voice SDK bundle) lives on the frontend.
   app.use(
     helmet({
       contentSecurityPolicy: {
@@ -69,13 +73,6 @@ export function createApp(): Express {
           scriptSrc: ["'self'"],
           scriptSrcAttr: ["'none'"],
           styleSrc: ["'self'", 'https:', "'unsafe-inline'"],
-          // Twilio Voice SDK opens a signalling WebSocket to *.twilio.com and
-          // fetches ICE server config over HTTPS from the same origin.
-          connectSrc: ["'self'", 'https://*.twilio.com', 'wss://*.twilio.com'],
-          // Audio streams from the SDK are exposed as blob URLs; some SDK
-          // versions also spin up a Web Worker from a blob for jitter buffer.
-          mediaSrc: ["'self'", 'blob:'],
-          workerSrc: ["'self'", 'blob:'],
           upgradeInsecureRequests: [],
         },
       },
@@ -95,40 +92,21 @@ export function createApp(): Express {
   app.use(express.urlencoded({ extended: false })); // Twilio webhooks post form-encoded bodies
   app.use(defaultLimiter);
 
-  // Public "SCAN & CALL" web page - served for any /scan/:code, static assets first.
-  app.use('/scan', express.static(path.join(__dirname, '../public/scan')));
+  // The marketing site, /scan/:code page, and legal pages (/privacy, /terms,
+  // /sms-consent, /sms-terms, /legal/screenshots/*) are now served by the
+  // Vercel frontend at env.webBaseUrl. Backend root GET returns a tiny stub
+  // so any stray probe or old-link hit gets a redirect to the real site.
+  app.get('/', (_req, res) => res.redirect(301, env.webBaseUrl + '/'));
+  for (const p of ['/privacy', '/terms', '/sms-consent', '/sms-terms']) {
+    app.get(p, (_req, res) => res.redirect(301, env.webBaseUrl + p));
+  }
   app.get('/scan/:code', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/scan/index.html'));
+    res.redirect(301, `${env.webBaseUrl}/scan/${encodeURIComponent(req.params.code)}`);
   });
 
-  // Public product homepage — what Twilio A2P reviewers open first when
-  // vetting the brand's domain.
-  app.get('/', (_req, res) => {
-    res.sendFile(path.join(__dirname, '../public/index.html'));
-  });
-
-  // Legal + compliance pages required for Twilio A2P 10DLC / Stripe / App
-  // Store review. Kept as plain static HTML under public/legal so they render
-  // even if the database is down.
-  app.get('/privacy', (_req, res) => {
-    res.sendFile(path.join(__dirname, '../public/legal/privacy.html'));
-  });
-  app.get('/terms', (_req, res) => {
-    res.sendFile(path.join(__dirname, '../public/legal/terms.html'));
-  });
-  app.get('/sms-consent', (_req, res) => {
-    res.sendFile(path.join(__dirname, '../public/legal/sms-consent.html'));
-  });
-  // Screenshots embedded in /sms-consent (A2P 10DLC evidence). Scoped to this
-  // subfolder so raw legal .html files stay behind their pretty routes.
-  app.use('/legal/screenshots', express.static(path.join(__dirname, '../public/legal/screenshots')));
-  app.get('/sms-terms', (_req, res) => {
-    res.sendFile(path.join(__dirname, '../public/legal/sms-terms.html'));
-  });
-
-  // Homepage waitlist form target. Persists the email to server logs for now
-  // (dev team can wire to a real store or notification service later) and
-  // returns a static thank-you page.
+  // Homepage waitlist form target. Logs the email and redirects the browser
+  // to the frontend-hosted thank-you page so the form can POST cross-origin
+  // from the Vercel site without needing CORS-safe fetch handling.
   app.post('/waitlist', (req, res) => {
     const raw = ((req.body as Record<string, unknown> | undefined)?.email ?? '').toString().trim();
     const email = raw.slice(0, 254);
@@ -138,10 +116,11 @@ export function createApp(): Express {
       return;
     }
     console.log(`[waitlist] ${new Date().toISOString()} ${email}`);
-    res.sendFile(path.join(__dirname, '../public/legal/waitlist-thanks.html'));
+    res.redirect(303, env.webBaseUrl + '/waitlist-thanks');
   });
 
-  // Publicly served uploaded images (Dog/Luggage photos)
+  // Publicly served uploaded images (Dog/Luggage photos). These stay on the
+  // backend because they're written by the API at upload time.
   app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 
   app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
@@ -210,7 +189,7 @@ export function createApp(): Express {
         include: { vehicle: true, emergencyContacts: true },
       });
 
-      const scanUrl = `${env.appBaseUrl}/scan/${qr.uniqueCode}`;
+      const scanUrl = `${env.scanPublicUrl}/${qr.uniqueCode}`;
       res.json({
         qrId: qr.id,
         uniqueCode: qr.uniqueCode,

@@ -24,6 +24,11 @@ export const env = {
   appName: process.env.APP_NAME ?? 'JCSafeScan',
   appBaseUrl: required('APP_BASE_URL', 'http://localhost:4000'),
   scanPublicUrl: required('SCAN_PUBLIC_URL', 'http://localhost:4000/scan'),
+  // Public origin of the Vercel-hosted marketing + scan + legal site. Used for
+  // the /waitlist redirect target and the CORS allow-list. In dev leave as the
+  // backend origin so the backend's own /uploads links keep working from
+  // dev-only tooling that doesn't know about the Vite/Vercel dev server.
+  webBaseUrl: required('WEB_BASE_URL', 'http://localhost:4000'),
 
   databaseUrl: required('DATABASE_URL'),
 
